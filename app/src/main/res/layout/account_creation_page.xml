@@ -7,8 +7,8 @@
     tools:context=".AccountCreationPage">
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="412dp"
+        android:id="@+id/accountCreation_logo"
+        android:layout_width="410dp"
         android:layout_height="341dp"
         android:layout_marginStart="2dp"
         android:layout_marginTop="2dp"
@@ -18,4 +18,73 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/accountCreation_reviewQuote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/pacifico"
+        android:text="@string/reviewQuote"
+        android:textAlignment="center"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accountCreation_logo" />
+
+    <Button
+        android:id="@+id/accountCreation_createAccountButton"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="320dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="44dp"
+        android:fontFamily="@font/pacifico"
+        android:text="@string/create_an_account"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#795548"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accountCreation_reviewQuote" />
+
+    <Button
+        android:id="@+id/accountCreation_loginButton"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="320dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="96dp"
+        android:layout_marginEnd="44dp"
+        android:fontFamily="@font/pacifico"
+        android:text="@string/login"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#795548"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accountCreation_reviewQuote" />
+
+    <Button
+        android:id="@+id/accountCreation_loginWithGoogle"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="320dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginTop="168dp"
+        android:layout_marginEnd="44dp"
+        android:fontFamily="@font/pacifico"
+        android:text="@string/login_with_google"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#795548"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.666"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/accountCreation_reviewQuote" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

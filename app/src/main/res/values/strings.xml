@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Cafe App</string>
     <string name="cafe_logo_description">A physically appealing, but minimalistic cafe logo</string>
+    <string name="reviewQuote">\"The best cafe in the local area\" - TripAdvisor Dave</string>
+    <string name="create_an_account">Create An Account</string>
+    <string name="login">Login</string>
+    <string name="login_with_google">Login With Google</string>
 </resources>
