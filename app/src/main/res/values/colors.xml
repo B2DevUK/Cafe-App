@@ -2,4 +2,10 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Theme Colours Definition -->
+    <color name="colorPrimary">#EBD9B4</color>
+    <color name="colorPrimaryVariant">#9DBC98</color>
+    <color name="colorSecondary">#638889</color>
+
 </resources>
