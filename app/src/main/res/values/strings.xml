@@ -4,7 +4,11 @@
     <string name="reviewQuote">\"The best cafe in the local area\" - TripAdvisor Dave</string>
     <string name="create_an_account">Create An Account</string>
     <string name="login">Login</string>
-    <string name="login_with_google">Login With Google</string>
+    <string name="login_with_google">Login With Google 1 Click</string>
     <string name="enter_your_email">Enter your Email</string>
     <string name="enter_your_password">Enter your Password</string>
+    <string name="title_activity_dashboard">Dashboard</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>
