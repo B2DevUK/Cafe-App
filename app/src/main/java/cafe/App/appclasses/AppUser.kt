@@ -6,6 +6,8 @@ class AppUser {
     var email: String? = null
     private var password: String? = null
     var name: String? = null
+    var userId: Int? = null
+
 
     constructor() // No-Args constructor
 
