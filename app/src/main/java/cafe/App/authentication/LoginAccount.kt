@@ -7,7 +7,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import cafe.App.R
-import cafe.App.dashboard.Dashboard
+import cafe.App.Dashboard
 import com.google.firebase.auth.FirebaseAuth
 
 class LoginAccount : AppCompatActivity() {

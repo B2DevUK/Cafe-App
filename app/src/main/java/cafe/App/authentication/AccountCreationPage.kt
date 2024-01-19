@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import cafe.App.R
-import cafe.App.dashboard.Dashboard
+import cafe.App.Dashboard
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
