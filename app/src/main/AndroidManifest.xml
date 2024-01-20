@@ -13,24 +13,21 @@
         android:theme="@style/Theme.CafeApp"
         tools:targetApi="31">
         <activity
-            android:name=".dashboard.Dashboard"
+            android:name="cafe.app.Dashboard"
             android:exported="false"
-            android:label="@string/title_activity_dashboard" />
+            android:label="@string/title_activity_dashboard"
+            android:theme="@style/Theme.CafeApp.NoActionBar" />
         <activity
-            android:name=".authentication.AccountCreationPage"
+            android:name="cafe.app.authentication.AccountCreationPage"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!-- LoginAccount Activity -->
-        <activity android:name=".authentication.LoginAccount" />
-
-        <!-- CreateAccount Activity -->
-        <activity android:name=".authentication.CreateAccount" />
+        </activity> <!-- LoginAccount Activity -->
+        <activity android:name="cafe.app.authentication.LoginAccount" /> <!-- CreateAccount Activity -->
+        <activity android:name="cafe.app.authentication.CreateAccount" />
     </application>
 
 </manifest>

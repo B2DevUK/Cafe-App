@@ -43,7 +43,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/fragmentContainerView"
-                android:name="cafe.App.dashboard.ui.notifications.NotificationsFragment"
+                android:name="cafe.app.ui.notifications.NotificationsFragment"
                 android:layout_width="53dp"
                 android:layout_height="76dp"
                 android:foreground="@android:drawable/sym_action_email"
