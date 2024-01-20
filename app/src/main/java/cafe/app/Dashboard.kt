@@ -11,8 +11,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
-import cafe.App.R
-import cafe.App.databinding.ActivityDashboardBinding
+import cafe.app.R
+import cafe.app.databinding.ActivityDashboardBinding
 
 class Dashboard : AppCompatActivity() {
 

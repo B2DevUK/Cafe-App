@@ -1,5 +1,6 @@
 package cafe.app.database
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -48,6 +49,7 @@ class AdminDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
     }
 
     // Retrieve an admin by ID
+    @SuppressLint("Range")
     fun getAdminById(adminId: Long): Admin? {
         val db = readableDatabase
         val cursor: Cursor = db.query(

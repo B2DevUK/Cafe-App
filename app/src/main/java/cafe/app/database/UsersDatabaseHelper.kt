@@ -1,4 +1,5 @@
 package cafe.app.database
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -47,6 +48,7 @@ class UsersDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
     }
 
     // Retrieve a user by ID
+    @SuppressLint("Range")
     fun getUserById(userId: Long): AppUser? {
         val db = readableDatabase
         val cursor: Cursor = db.query(
@@ -74,6 +76,7 @@ class UsersDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE
     }
 
     // Retrieve a user by email (for authentication)
+    @SuppressLint("Range")
     fun getUserByEmail(email: String): AppUser? {
         val db = readableDatabase
         val cursor: Cursor = db.query(

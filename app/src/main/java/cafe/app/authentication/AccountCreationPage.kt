@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
-import cafe.App.R
+import cafe.app.R
 import cafe.app.Dashboard
 import cafe.app.database.ProductDatabaseHelper
 import com.google.android.gms.auth.api.signin.GoogleSignIn

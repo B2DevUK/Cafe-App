@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import cafe.App.databinding.FragmentCheckoutBinding
+import cafe.app.databinding.FragmentCheckoutBinding
 
 class CheckoutFragment : Fragment() {
 
@@ -23,7 +23,7 @@ class CheckoutFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val checkoutViewModel =
-            ViewModelProvider(this).get(CheckoutViewModel::class.java)
+            ViewModelProvider(this)[CheckoutViewModel::class.java]
 
         _binding = FragmentCheckoutBinding.inflate(inflater, container, false)
         val root: View = binding.root

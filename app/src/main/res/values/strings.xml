@@ -32,4 +32,8 @@
     <string name="snacks">Snacks</string>
     <string name="merch">Merch</string>
     <string name="category_title">Category Title</string>
+    <string name="product_name">Product Name</string>
+    <string name="product_description">Product Description</string>
+    <string name="product_price">Product Price</string>
+    <string name="add_to_cart">Add to Cart</string>
 </resources>

@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "cafe.App"
+    namespace = "cafe.app"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "cafe.App"
+        applicationId = "cafe.app"
         minSdk = 29
         targetSdk = 33
         versionCode = 1
@@ -37,6 +37,7 @@ android {
     }
     buildFeatures {
         viewBinding = true
+        dataBinding = true
     }
 }
 
@@ -50,6 +51,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
+    implementation("androidx.databinding:databinding-runtime:8.2.1")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -60,8 +62,8 @@ dependencies {
     // Firebase Analytics
     implementation("com.google.firebase:firebase-analytics")
     // Firebase SDK
-    implementation("com.google.firebase:firebase-auth:21.0.1")
+    implementation("com.google.firebase:firebase-auth:22.3.0")
     // Google Sign-In SDK
-    implementation("com.google.android.gms:play-services-auth:20.0.0")
+    implementation("com.google.android.gms:play-services-auth:20.7.0")
 
 }

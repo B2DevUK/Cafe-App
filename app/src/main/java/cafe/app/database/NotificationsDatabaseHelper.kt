@@ -1,5 +1,6 @@
 package cafe.app.database
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -50,6 +51,7 @@ class NotificationsDatabaseHelper(context: Context) : SQLiteOpenHelper(context, 
     }
 
     // Retrieve a notification by ID
+    @SuppressLint("Range")
     fun getNotificationById(notificationId: Long): Notification? {
         val db = readableDatabase
         val cursor: Cursor = db.query(

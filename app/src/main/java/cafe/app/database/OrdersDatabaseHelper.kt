@@ -1,5 +1,6 @@
 package cafe.app.database
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
@@ -52,6 +53,7 @@ class OrdersDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABAS
     }
 
     // Retrieve an order by ID
+    @SuppressLint("Range")
     fun getOrderById(orderId: Long): Order? {
         val db = readableDatabase
         val cursor: Cursor = db.query(

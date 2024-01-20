@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import cafe.App.R
+import cafe.app.R
 import cafe.app.Dashboard
 import com.google.firebase.auth.FirebaseAuth
 
