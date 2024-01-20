@@ -24,12 +24,20 @@ class CheckoutAdapter(private val context: Context) :
         holder.bind(cartItem)
     }
 
+    fun calculateTotalPrice(): Double {
+        var totalPrice = 0.0
+        currentList.forEach { cartItem ->
+            totalPrice += cartItem.product.price * cartItem.quantity
+        }
+        return totalPrice
+    }
+
     inner class CartItemViewHolder(private val binding: CartItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(cartItem: CartItem) {
-            binding.productName.text = context.getString(R.string.product_name_placeholder)
-            binding.productDescription.text = context.getString(R.string.product_description_placeholder)
+            binding.productName.text = cartItem.product.name // Set product name
+            binding.productDescription.text = cartItem.product.description // Set product description
             binding.productPrice.text = String.format(
                 context.getString(R.string.price_placeholder),
                 cartItem.product.price
@@ -38,9 +46,9 @@ class CheckoutAdapter(private val context: Context) :
                 context.getString(R.string.quantity_placeholder),
                 cartItem.quantity
             )
-
         }
     }
+
 
     private class CartItemDiffCallback : DiffUtil.ItemCallback<CartItem>() {
         override fun areItemsTheSame(oldItem: CartItem, newItem: CartItem): Boolean {
