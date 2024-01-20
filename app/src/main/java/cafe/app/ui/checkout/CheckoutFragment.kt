@@ -4,39 +4,39 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import cafe.app.R
+import cafe.app.adapters.CheckoutAdapter
+import cafe.app.appclasses.CartItem
 import cafe.app.databinding.FragmentCheckoutBinding
 
 class CheckoutFragment : Fragment() {
 
-    private var _binding: FragmentCheckoutBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    private lateinit var checkoutViewModel: CheckoutViewModel
+    private lateinit var checkoutAdapter: CheckoutAdapter // You'll need to create this adapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val checkoutViewModel =
-            ViewModelProvider(this)[CheckoutViewModel::class.java]
+        val binding = FragmentCheckoutBinding.inflate(inflater, container, false)
+        val root = binding.root
 
-        _binding = FragmentCheckoutBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        checkoutViewModel = ViewModelProvider(requireActivity()).get(CheckoutViewModel::class.java)
+        checkoutAdapter = CheckoutAdapter(requireContext())
 
-        val textView: TextView = binding.textGallery
-        checkoutViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+        val recyclerView: RecyclerView = binding.checkoutRecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = checkoutAdapter
+
+        checkoutViewModel.cartItems.observe(viewLifecycleOwner) { cartItems ->
+            checkoutAdapter.submitList(cartItems)
         }
-        return root
-    }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+        return root
     }
 }

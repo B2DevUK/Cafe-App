@@ -8,23 +8,27 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import cafe.app.R
+import cafe.app.appclasses.CartItem
 import cafe.app.database.ProductDatabaseHelper
 import cafe.app.databinding.ProductContainerBinding
 import cafe.app.databinding.CategoryContainerBinding
+import cafe.app.ui.checkout.CheckoutViewModel
 
 class MenuFragment : Fragment() {
 
     private lateinit var productsDatabaseHelper: ProductDatabaseHelper
     private lateinit var containerForCategories: LinearLayout
     private lateinit var scrollView: ScrollView
+    private lateinit var cartViewModel: CheckoutViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.fragment_menu, container, false)
 
         scrollView = view.findViewById(R.id.scrollView)
         containerForCategories = view.findViewById(R.id.containerForCategories)
-
+        cartViewModel = ViewModelProvider(requireActivity()).get(CheckoutViewModel::class.java)
         productsDatabaseHelper = ProductDatabaseHelper(requireContext())
 
         return view
@@ -63,8 +67,10 @@ class MenuFragment : Fragment() {
                 productDescriptionTextView.text = product.description
                 productPriceTextView.text = product.price.toString()
 
+                // Handle adding product to cart when addToCartButton is clicked
                 addToCartButton.setOnClickListener {
-                    // Handle adding product to cart
+                    val cartItem = CartItem(product, 1, 1) // You can initially set the quantity to 1
+                    cartViewModel.addToCart(cartItem)
                 }
 
                 // Add the product view to the category container
