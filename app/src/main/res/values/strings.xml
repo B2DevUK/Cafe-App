@@ -27,4 +27,9 @@
     <string name="menu">Menu</string>
     <string name="checkout">Checkout</string>
     <string name="notifications">Notifications</string>
+    <string name="tea">Tea</string>
+    <string name="coffee">Coffee</string>
+    <string name="snacks">Snacks</string>
+    <string name="merch">Merch</string>
+    <string name="category_title">Category Title</string>
 </resources>
