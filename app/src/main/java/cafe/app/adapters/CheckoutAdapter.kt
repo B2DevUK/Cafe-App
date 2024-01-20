@@ -10,8 +10,13 @@ import cafe.app.R
 import cafe.app.appclasses.CartItem
 import cafe.app.databinding.CartItemLayoutBinding
 
-class CheckoutAdapter(private val context: Context) :
-    ListAdapter<CartItem, CheckoutAdapter.CartItemViewHolder>(CartItemDiffCallback()) {
+class CheckoutAdapter(
+    private val context: Context,
+    private val incrementClickListener: (CartItem) -> Unit,
+    private val decrementClickListener: (CartItem) -> Unit,
+    private val removeClickListener: (CartItem) -> Unit
+
+    ) :ListAdapter<CartItem, CheckoutAdapter.CartItemViewHolder>(CartItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItemViewHolder {
         val binding =
@@ -34,6 +39,29 @@ class CheckoutAdapter(private val context: Context) :
 
     inner class CartItemViewHolder(private val binding: CartItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
+
+        init {
+            binding.incrementButton.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    incrementClickListener(getItem(position))
+                }
+            }
+
+            binding.decrementButton.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    decrementClickListener(getItem(position))
+                }
+            }
+
+            binding.removeButton.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    removeClickListener(getItem(position))
+                }
+            }
+        }
 
         fun bind(cartItem: CartItem) {
             binding.productName.text = cartItem.product.name // Set product name

@@ -28,14 +28,29 @@ class CheckoutFragment : Fragment() {
         val root = binding.root
 
         checkoutViewModel = ViewModelProvider(requireActivity()).get(CheckoutViewModel::class.java)
-        checkoutAdapter = CheckoutAdapter(requireContext())
+
+        // Bind the totalPriceTextView to the view in the layout
+        totalPriceTextView = binding.totalPriceTextView
+
+        // Initialize the CheckoutAdapter with click listeners
+        checkoutAdapter = CheckoutAdapter(requireContext(),
+            incrementClickListener = { cartItem ->
+                // Handle incrementing cart item quantity
+                checkoutViewModel.incrementCartItem(cartItem)
+            },
+            decrementClickListener = { cartItem ->
+                // Handle decrementing cart item quantity
+                checkoutViewModel.decrementCartItem(cartItem)
+            },
+            removeClickListener = { cartItem ->
+                // Handle removing cart item
+                checkoutViewModel.removeFromCart(cartItem)
+            }
+        )
 
         val recyclerView: RecyclerView = binding.checkoutRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = checkoutAdapter
-
-        // Initialize totalPriceTextView by finding it in the layout
-        totalPriceTextView = binding.totalPriceTextView
 
         checkoutViewModel.cartItems.observe(viewLifecycleOwner) { cartItems ->
             checkoutAdapter.submitList(cartItems)
@@ -43,7 +58,6 @@ class CheckoutFragment : Fragment() {
             // Calculate the total price and update the TextView
             val totalPrice = checkoutAdapter.calculateTotalPrice()
             totalPriceTextView.text = getString(R.string.total_price, totalPrice)
-
         }
 
         return root

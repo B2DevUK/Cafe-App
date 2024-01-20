@@ -38,4 +38,28 @@ class CheckoutViewModel : ViewModel() {
         }
         _cartItems.value = currentCart
     }
+
+    // Increment the quantity of a cart item
+    fun incrementCartItem(cartItem: CartItem) {
+        val currentCart = _cartItems.value?.toMutableList() ?: mutableListOf()
+        val index = currentCart.indexOf(cartItem)
+        if (index != -1) {
+            currentCart[index] = cartItem.copy(quantity = cartItem.quantity + 1)
+            _cartItems.value = currentCart
+        }
+    }
+
+    // Decrement the quantity of a cart item
+    fun decrementCartItem(cartItem: CartItem) {
+        val currentCart = _cartItems.value?.toMutableList() ?: mutableListOf()
+        val index = currentCart.indexOf(cartItem)
+        if (index != -1) {
+            if (cartItem.quantity > 1) {
+                currentCart[index] = cartItem.copy(quantity = cartItem.quantity - 1)
+            } else {
+                currentCart.removeAt(index)
+            }
+            _cartItems.value = currentCart
+        }
+    }
 }
