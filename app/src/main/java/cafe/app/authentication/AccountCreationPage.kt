@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.Toast
 import cafe.App.R
 import cafe.app.Dashboard
+import cafe.app.database.ProductDatabaseHelper
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -61,6 +62,13 @@ class AccountCreationPage : AppCompatActivity() {
             val intent = Intent(this, CreateAccount::class.java)
             startActivity(intent)
         }
+
+        importProductsFromCSV()
+    }
+
+    private fun importProductsFromCSV() {
+        val productDatabaseHelper = ProductDatabaseHelper(this)
+        productDatabaseHelper.importProductsFromCSV(this)
     }
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {

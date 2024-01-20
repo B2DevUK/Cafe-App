@@ -1,11 +1,14 @@
 package cafe.app.database
 
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import cafe.app.appclasses.Product
+import java.io.BufferedReader
+import java.io.InputStreamReader
 
 class ProductDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
@@ -55,6 +58,7 @@ class ProductDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABA
 
 
     // Retrieve a product by ID
+    @SuppressLint("Range")
     fun getProductById(id: Int): Product? {
         val db = readableDatabase
         val cursor: Cursor = db.query(
@@ -111,6 +115,7 @@ class ProductDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABA
     }
 
     // Retrieve all products
+    @SuppressLint("Range")
     fun getAllProducts(): List<Product> {
         val productList = mutableListOf<Product>()
         val db = readableDatabase
@@ -132,7 +137,7 @@ class ProductDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABA
                 val price = cursor.getDouble(cursor.getColumnIndex(COLUMN_PRICE))
                 val imageUrl = cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE_URL))
                 val category = cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY))
-                productList.add(Product(id, name, description, price, imageUrl, category)) // Include category in the Product constructor
+                productList.add(Product(id, name, description, price, imageUrl, category))
             } while (cursor.moveToNext())
         }
 
@@ -143,6 +148,7 @@ class ProductDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABA
 
 
     // Retrieve products by category
+    @SuppressLint("Range")
     fun getProductsByCategory(category: String): List<Product> {
         val productList = mutableListOf<Product>()
         val db = readableDatabase
@@ -172,6 +178,70 @@ class ProductDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABA
         db.close()
 
         return productList
+    }
+
+    fun getAllProductsByCategory(): Map<String, List<Product>> {
+        val productMap = mutableMapOf<String, MutableList<Product>>() // Change the value type to MutableList<Product>
+
+        val allProducts = getAllProducts() // Assuming you have a function to retrieve all products
+
+        for (product in allProducts) {
+            val category = product.category
+
+            if (!productMap.containsKey(category)) {
+                productMap[category] = mutableListOf()
+            }
+
+            productMap[category]?.add(product) // Use ?. to safely call add on a nullable MutableList
+        }
+
+        // Convert all values to immutable lists
+        return productMap.mapValues { entry -> entry.value.toList() }
+    }
+
+    fun importProductsFromCSV(context: Context) {
+        val productDatabaseHelper = ProductDatabaseHelper(context)
+        val inputStream = context.assets.open("products.csv")
+
+        try {
+            val reader = BufferedReader(InputStreamReader(inputStream))
+            var line: String?
+
+            // Read and process each line of the CSV file
+            while (reader.readLine().also { line = it } != null) {
+                val parts = line!!.split(",")
+
+                if (parts.size == 6) {
+                    // Parse the CSV data
+                    val productId = parts[0].toInt()
+                    val productName = parts[1]
+                    val productPrice = parts[2].toDouble()
+                    val productDesc = parts[3]
+                    val productImg = parts[4]
+                    val productCategory = parts[5]
+
+                    // Check if the product with the same ID already exists in the database
+                    val existingProduct = productDatabaseHelper.getProductById(productId)
+
+                    if (existingProduct == null) {
+                        // Create a new Product object
+                        val product = Product(productId, productName, productDesc, productPrice, productImg, productCategory)
+
+                        // Add the product to the database
+                        productDatabaseHelper.addProduct(product)
+                    } else {
+                        continue // Skip this product and move to the next one
+                    }
+                }
+            }
+
+            reader.close()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            inputStream.close()
+            productDatabaseHelper.close()
+        }
     }
 
 }

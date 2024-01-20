@@ -1,0 +1,26 @@
+1,Green Tea,2.99,A refreshing cup of green tea.,green_tea_image.jpg,Tea
+2,Earl Grey Tea,3.49,Classic Earl Grey tea with bergamot flavor.,earl_grey_tea_image.jpg,Tea
+3,Chamomile Tea,2.99,Soothing chamomile tea for relaxation.,chamomile_tea_image.jpg,Tea
+4,Peppermint Tea,2.99,Refreshing and minty peppermint tea.,peppermint_tea_image.jpg,Tea
+5,Jasmine Tea,3.49,Fragrant jasmine tea for a floral taste.,jasmine_tea_image.jpg,Tea
+6,Chai Tea,3.99,Spiced chai tea with a hint of cinnamon.,chai_tea_image.jpg,Tea
+7,Hibiscus Tea,3.49,Tangy and fruity hibiscus tea.,hibiscus_tea_image.jpg,Tea
+8,Oolong Tea,3.99,Smooth and semi-oxidized oolong tea.,oolong_tea_image.jpg,Tea
+9,White Tea,3.49,Delicate white tea with subtle flavors.,white_tea_image.jpg,Tea
+10,Rooibos Tea,2.99,Caffeine-free and naturally sweet rooibos tea.,rooibos_tea_image.jpg,Tea
+11,Espresso,2.49,Intense and bold espresso shot.,espresso_image.jpg,Coffee
+12,Cappuccino,3.49,Creamy cappuccino with frothy milk.,cappuccino_image.jpg,Coffee
+13,Latte,3.99,Smooth and velvety latte with espresso and steamed milk.,latte_image.jpg,Coffee
+14,Americano,2.99,Diluted espresso for a milder coffee flavor.,americano_image.jpg,Coffee
+15,Mocha,3.99,Rich and chocolatey mocha coffee.,mocha_image.jpg,Coffee
+16,Cold Brew,4.49,Refreshing cold brew coffee.,cold_brew_image.jpg,Coffee
+17,Irish Coffee,4.99,Whiskey-spiked Irish coffee.,irish_coffee_image.jpg,Coffee
+18,Turkish Coffee,3.99,Traditional Turkish coffee with cardamom.,turkish_coffee_image.jpg,Coffee
+19,Macchiato,3.49,"Espresso ""stained"" with a dollop of frothy milk.",macchiato_image.jpg,Coffee
+20,Decaf Coffee,2.99,Decaffeinated coffee for those who prefer no caffeine.,decaf_coffee_image.jpg,Coffee
+21,Chocolate Chip Cookies,1.99,Delicious homemade chocolate chip cookies,cookies_image.jpg,Snacks
+22,Potato Chips,1.49,"Crunchy potato chips, salted",potato_chips_image.jpg,Snacks
+23,Mixed Nuts,2.99,"A mix of roasted nuts, lightly salted",mixed_nuts_image.jpg,Snacks
+24,Cafe Mug,8.99,Cafe-branded ceramic coffee mug,cafe_mug_image.jpg,Merchandise
+25,T-Shirt,12.99,"Cafe logo T-shirt, available in various sizes",tshirt_image.jpg,Merchandise
+26,Cafe Keychain,4.99,Keychain with cafe logo,keychain_image.jpg,Merchandise
