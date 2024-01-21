@@ -243,6 +243,38 @@ class ProductDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABA
             productDatabaseHelper.close()
         }
     }
+    fun getProductByName(productName: String): Product? {
+        val db = readableDatabase
+        var product: Product? = null
 
+        val selection = "$COLUMN_NAME = ?"
+        val selectionArgs = arrayOf(productName)
+
+        val cursor = db.query(
+            TABLE_PRODUCTS,
+            null,
+            selection,
+            selectionArgs,
+            null,
+            null,
+            null
+        )
+
+        if (cursor.moveToFirst()) {
+            val id = cursor.getInt(cursor.getColumnIndex(COLUMN_ID))
+            val name = cursor.getString(cursor.getColumnIndex(COLUMN_NAME))
+            val description = cursor.getString(cursor.getColumnIndex(COLUMN_DESCRIPTION))
+            val price = cursor.getDouble(cursor.getColumnIndex(COLUMN_PRICE))
+            val imageUrl = cursor.getString(cursor.getColumnIndex(COLUMN_IMAGE_URL))
+            val category = cursor.getString(cursor.getColumnIndex(COLUMN_CATEGORY))
+
+            product = Product(id, name, description, price, imageUrl, category)
+        }
+
+        cursor.close()
+        db.close()
+
+        return product
+    }
 }
 

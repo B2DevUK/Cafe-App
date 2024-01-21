@@ -42,7 +42,7 @@ android {
 }
 
 dependencies {
-
+    implementation("com.google.code.gson:gson:2.8.8") // Add this line for Gson
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.11.0")
@@ -65,5 +65,4 @@ dependencies {
     implementation("com.google.firebase:firebase-auth:22.3.0")
     // Google Sign-In SDK
     implementation("com.google.android.gms:play-services-auth:20.7.0")
-
 }

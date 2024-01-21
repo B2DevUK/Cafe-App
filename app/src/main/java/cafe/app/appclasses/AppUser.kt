@@ -12,7 +12,7 @@ class AppUser {
     constructor() // No-Args constructor
 
     // Constructor for account creation via email & password
-    constructor(email: String, password: String) {
+    constructor(email: String, password: String?) {
         this.email = email
         this.password = password
     }
