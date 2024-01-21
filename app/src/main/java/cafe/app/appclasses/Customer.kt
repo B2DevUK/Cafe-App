@@ -1,6 +1,6 @@
 package cafe.app.appclasses
 
-data class Admin(
+data class Customer(
     val id: Int,
     val fullName: String,
     val email: String,
