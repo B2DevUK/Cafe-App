@@ -6,6 +6,8 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import cafe.app.appclasses.Customer
+import cafe.app.appclasses.Order
+import cafe.app.appclasses.OrderDetail
 import cafe.app.appclasses.Product
 import java.io.BufferedReader
 import java.io.IOException
@@ -13,7 +15,7 @@ import java.io.InputStreamReader
 
 /* Database Config*/
 private val DataBaseName = "CourseWorkDB.db"
-private val ver : Int = 1
+private val ver : Int = 4
 
 class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null , ver) {
 
@@ -26,6 +28,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
     private val Customer_Column_UserName = "CusUserName"
     private val Customer_Column_Password = "CusPassword"
     private val Customer_Column_IsActive = "CusIsActive"
+    private val Customer_Column_FirebaseUID = "CusFirebaseUID"
 
     /* Admin Table */
     private val AdminTableName = "TAdmin"
@@ -81,7 +84,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
         // Create Customer table
         var sqlCreateStatement: String = "CREATE TABLE $CustomerTableName ( $Customer_Column_ID INTEGER PRIMARY KEY AUTOINCREMENT, $Customer_Column_FullName TEXT NOT NULL, " +
                                          " $Customer_Column_Email TEXT NOT NULL, $Customer_Column_PhoneNo TEXT NOT NULL, $Customer_Column_UserName TEXT NOT NULL, " +
-                                         " $Customer_Column_Password TEXT NOT NULL, $Customer_Column_IsActive INTEGER NOT NULL )"
+                                         " $Customer_Column_Password TEXT NOT NULL, $Customer_Column_IsActive INTEGER NOT NULL, $Customer_Column_FirebaseUID TEXT NOT NULL )"
 
         db?.execSQL(sqlCreateStatement)
 //..........................................................
@@ -151,7 +154,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
     // other functions
 
     // CUSTOMER CRUD FUNCTIONS
-    fun addCustomer(fullName: String, email: String, phoneNo: String, userName: String, password: String, isActive: Int): Long {
+    fun addCustomer(fullName: String, email: String, phoneNo: String, userName: String, password: String, isActive: Int, firebaseUid: String): Long {
         val db = this.writableDatabase
         val contentValues = ContentValues().apply {
             put("CusFullName", fullName)
@@ -160,6 +163,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
             put("CusUserName", userName)
             put("CusPassword", password)
             put("CusIsActive", isActive)
+            put("CusFirebaseUID", firebaseUid)
         }
         val success = db.insert("TCustomer", null, contentValues)
         db.close()
@@ -417,7 +421,8 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
                     phoneNo = getString(getColumnIndexOrThrow("CusPhoneNo")),
                     userName = getString(getColumnIndexOrThrow("CusUserName")),
                     password = getString(getColumnIndexOrThrow("CusPassword")),
-                    isActive = getInt(getColumnIndexOrThrow("CusIsActive"))
+                    isActive = getInt(getColumnIndexOrThrow("CusIsActive")),
+                    firebaseUid = getString(getColumnIndexOrThrow("CusFirebaseUID"))
                 )
                 close()
                 return customer
@@ -426,6 +431,70 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
         cursor.close()
         return null
     }
+
+    fun fetchUserDetailsByFirebaseUid(firebaseUid: String): Customer? {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            "TCustomer",
+            null, // all columns
+            "CusFirebaseUID = ?", // selection
+            arrayOf(firebaseUid), // selection args
+            null, // groupBy
+            null, // having
+            null // orderBy
+        )
+        with(cursor) {
+            if (moveToFirst()) {
+                val customer = Customer(
+                    id = getInt(getColumnIndexOrThrow("CusId")),
+                    fullName = getString(getColumnIndexOrThrow("CusFullName")),
+                    email = getString(getColumnIndexOrThrow("CusEmail")),
+                    phoneNo = getString(getColumnIndexOrThrow("CusPhoneNo")),
+                    userName = getString(getColumnIndexOrThrow("CusUserName")),
+                    password = getString(getColumnIndexOrThrow("CusPassword")),
+                    isActive = getInt(getColumnIndexOrThrow("CusIsActive")),
+                    firebaseUid = getString(getColumnIndexOrThrow("CusFirebaseUID"))
+                )
+                close()
+                return customer
+            }
+        }
+        cursor.close()
+        return null
+    }
+
+    fun updateCustomerSelective(firebaseUid: String, fullName: String?, email: String?, phoneNo: String?, userName: String?, password: String?, isActive: Int? = null) {
+        val db = this.writableDatabase
+        val contentValues = ContentValues().apply {
+            fullName?.let { put("CusFullName", it) }
+            email?.let { put("CusEmail", it) }
+            phoneNo?.let { put("CusPhoneNo", it) }
+            userName?.let { put("CusUserName", it) }
+            password?.let { put("CusPassword", it) } // Consider security implications
+            isActive?.let { put("CusIsActive", it) }
+        }
+        // Use Firebase UID for selection
+        db.update("TCustomer", contentValues, "CusFirebaseUID = ?", arrayOf(firebaseUid))
+        db.close()
+    }
+
+    fun getCustomerIdByFirebaseUid(firebaseUid: String): Int? {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            "TCustomer",
+            arrayOf("CusId"),
+            "CusFirebaseUID = ?",
+            arrayOf(firebaseUid),
+            null,
+            null,
+            null,
+            "1"
+        )
+        val customerId: Int? = if (cursor.moveToFirst()) cursor.getInt(cursor.getColumnIndex("CusId")) else null
+        cursor.close()
+        return customerId
+    }
+
 
     // PRODUCTS
     fun importProductsFromCSV(context: Context) {
@@ -504,4 +573,84 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
         return productsByCategory
     }
 
+    fun getProductNameById(productId: Int): String {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            "TProduct", // Table name
+            arrayOf("ProductName"), // Columns to return
+            "ProductID = ?", // Selection criteria
+            arrayOf(productId.toString()), // Selection arguments
+            null, // Group by
+            null, // Having
+            null, // Order by
+            "1" // Limit to 1 result
+        )
+        var productName = ""
+        if (cursor.moveToFirst()) {
+            productName = cursor.getString(cursor.getColumnIndexOrThrow("ProductName"))
+        }
+        cursor.close()
+        return productName
+    }
+
+
+    // ORDERS
+
+    fun getOrdersByCustomerId(customerId: Int): List<Order> {
+        val orders = mutableListOf<Order>()
+        val db = this.readableDatabase
+        val cursor = db.query(
+            "TOrder",
+            null,
+            "CustomerID = ?",
+            arrayOf(customerId.toString()),
+            null,
+            null,
+            null
+        )
+
+        if (cursor.moveToFirst()) {
+            do {
+                val order = Order(
+                    id = cursor.getInt(cursor.getColumnIndexOrThrow("OrderID")),
+                    customerId = cursor.getInt(cursor.getColumnIndexOrThrow("CustomerID")),
+                    date = cursor.getString(cursor.getColumnIndexOrThrow("OrderDate")),
+                    time = cursor.getString(cursor.getColumnIndexOrThrow("OrderTime")),
+                    status = cursor.getInt(cursor.getColumnIndexOrThrow("OrderStatus"))
+                )
+                orders.add(order)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+
+        return orders
+    }
+
+    // ORDER DETAILS
+
+    fun getOrderDetailsByOrderId(orderId: Int): List<OrderDetail> {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            "TOrderDetails",
+            null,
+            "OrderID = ?",
+            arrayOf(orderId.toString()),
+            null,
+            null,
+            null
+        )
+        val orderDetails = mutableListOf<OrderDetail>()
+        while (cursor.moveToNext()) {
+            val orderDetail = OrderDetail(
+                id = cursor.getInt(cursor.getColumnIndex("OrderDetailsID")),
+                orderId = cursor.getInt(cursor.getColumnIndex("OrderID")),
+                productId = cursor.getInt(cursor.getColumnIndex("ProductID")),
+                quantity = cursor.getInt(cursor.getColumnIndex("Quantity")),
+                totalPrice = cursor.getDouble(cursor.getColumnIndex("TotalPrice"))
+            )
+            orderDetails.add(orderDetail)
+        }
+        cursor.close()
+        return orderDetails
+    }
 }

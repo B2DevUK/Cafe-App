@@ -24,21 +24,23 @@
             android:id="@+id/checkoutButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Proceed to Checkout"
             android:layout_margin="16dp"
+            android:fontFamily="@font/pacifico"
+            android:text="Proceed to Checkout"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/totalPriceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/total_price"
             android:layout_margin="16dp"
+            android:fontFamily="@font/pacifico"
+            android:text="@string/total_price"
             app:layout_constraintBottom_toTopOf="@id/checkoutButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

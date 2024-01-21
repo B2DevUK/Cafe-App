@@ -1,13 +1,13 @@
 name,price,image,isAvailable,category
-Green Tea,1.5,,1,Tea
-Black Tea,1.5,,1,Tea
-Oolong Tea,2.0,,1,Tea
-Espresso,2.0,,1,Coffee
-Latte,2.5,,1,Coffee
-Cappuccino,2.5,,1,Coffee
-Cheesecake,3.0,,1,Cakes
-Chocolate Cake,3.5,,1,Cakes
-Croissant,1.5,,1,Snacks
-Muffin,2.0,,1,Snacks
-T-Shirt,15.0,,1,Merchandise
-Coffee Mug,8.0,,1,Merchandise
+Green Tea,1.50,https://i.imgur.com/8ZUlGkt.png,1,Tea
+Black Tea,1.50,https://i.imgur.com/bU625Ae.png,1,Tea
+Oolong Tea,2.00,https://i.imgur.com/Rm1S5aJ.png,1,Tea
+Espresso,2.00,https://i.imgur.com/ZxId6M5.png,1,Coffee
+Latte,2.50,https://i.imgur.com/NPZYJmN.png,1,Coffee
+Cappuccino,2.50,https://i.imgur.com/NlPDcgX.png,1,Coffee
+Cheesecake,3.00,https://i.imgur.com/RyL87GH.png,1,Cakes
+Chocolate Cake,3.50,https://i.imgur.com/7BLShiB.png,1,Cakes
+Croissant,1.50,https://i.imgur.com/LyCejFo.png,1,Snacks
+Muffin,2.00,https://i.imgur.com/XWIED2o.png,1,Snacks
+T-Shirt,15.00,https://i.imgur.com/ptBLBy5.png,1,Merchandise
+Coffee Mug,8.00,https://i.imgur.com/BJEgQfh.png,1,Merchandise

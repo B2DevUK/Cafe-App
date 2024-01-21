@@ -4,39 +4,48 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import cafe.app.adapters.NotificationsAdapter
+import cafe.app.database.DBHelper
 import cafe.app.databinding.FragmentNotificationsBinding
+import com.google.firebase.auth.FirebaseAuth
 
 class NotificationsFragment : Fragment() {
 
-    private var _binding: FragmentNotificationsBinding? = null
+    private lateinit var binding: FragmentNotificationsBinding
+    private lateinit var viewModel: NotificationsViewModel
 
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        binding = FragmentNotificationsBinding.inflate(inflater, container, false)
+        val factory = NotificationsViewModelFactory(requireActivity().applicationContext)
+        viewModel = ViewModelProvider(this, factory)[NotificationsViewModel::class.java]
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val notificationsViewModel =
-            ViewModelProvider(this)[NotificationsViewModel::class.java]
+        setupRecyclerView()
 
-        _binding = FragmentNotificationsBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        // Load orders for the logged-in customer
+        viewModel.fetchOrders()
 
-        val textView: TextView = binding.textSlideshow
-        notificationsViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
-        return root
+        return binding.root
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    private fun setupRecyclerView() {
+        val dbHelper = DBHelper(requireContext())
+        val adapter = NotificationsAdapter(dbHelper)
+        binding.notificationsRecyclerView.adapter = adapter
+        binding.notificationsRecyclerView.layoutManager = LinearLayoutManager(context)
+
+        viewModel.notifications.observe(viewLifecycleOwner) { notifications ->
+            adapter.submitList(notifications)
+        }
+    }
+
+    private fun getCurrentCustomerId(): Int {
+        val dbHelper = DBHelper(requireContext())
+        return FirebaseAuth.getInstance().currentUser?.uid?.let { firebaseUid ->
+            dbHelper.getCustomerIdByFirebaseUid(firebaseUid) ?: -1
+        } ?: -1
     }
 }
+

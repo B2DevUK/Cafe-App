@@ -35,10 +35,10 @@ class CreateAccount : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    val firebaseUid = auth.currentUser?.uid ?: ""
                     Toast.makeText(this, "Account created successfully", Toast.LENGTH_SHORT).show()
 
-                    // ASSUMING PHONE NUMBER NOT AVAILABLE YET
-                    val newRowId = dbHelper.addCustomer("", email, "", userName, password, 1)
+                    val newRowId = dbHelper.addCustomer("", email, "", userName, password, 1, firebaseUid)
 
                     if (newRowId != -1L) {
                         Toast.makeText(this, "Customer data saved to database", Toast.LENGTH_SHORT).show()
@@ -54,5 +54,4 @@ class CreateAccount : AppCompatActivity() {
                 }
             }
     }
-
 }

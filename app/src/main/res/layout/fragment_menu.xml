@@ -19,30 +19,35 @@
         <TextView
             android:id="@+id/buttonTea"
             style="@style/NavigationButtonStyle"
+            android:fontFamily="@font/pacifico"
             android:text="@string/tea" />
 
         <!-- Button for Coffee -->
         <TextView
             android:id="@+id/buttonCoffee"
             style="@style/NavigationButtonStyle"
+            android:fontFamily="@font/pacifico"
             android:text="@string/coffee" />
 
         <!-- Button for Cakes -->
         <TextView
             android:id="@+id/buttonCakes"
             style="@style/NavigationButtonStyle"
+            android:fontFamily="@font/pacifico"
             android:text="@string/cakes" />
 
         <!-- Button for Snacks -->
         <TextView
             android:id="@+id/buttonSnacks"
             style="@style/NavigationButtonStyle"
+            android:fontFamily="@font/pacifico"
             android:text="@string/snacks" />
 
         <!-- Button for Merch -->
         <TextView
             android:id="@+id/buttonMerch"
             style="@style/NavigationButtonStyle"
+            android:fontFamily="@font/pacifico"
             android:text="@string/merch" />
     </LinearLayout>
 

@@ -14,6 +14,7 @@ import cafe.app.database.DBHelper
 import cafe.app.databinding.ProductContainerBinding
 import cafe.app.databinding.CategoryContainerBinding
 import cafe.app.ui.checkout.CheckoutViewModel
+import com.bumptech.glide.Glide
 
 class MenuFragment : Fragment() {
 
@@ -27,7 +28,7 @@ class MenuFragment : Fragment() {
 
         scrollView = view.findViewById(R.id.scrollView)
         containerForCategories = view.findViewById(R.id.containerForCategories)
-        cartViewModel = ViewModelProvider(requireActivity()).get(CheckoutViewModel::class.java)
+        cartViewModel = ViewModelProvider(requireActivity())[CheckoutViewModel::class.java]
         databaseHelper = DBHelper(requireContext())
 
         return view
@@ -56,10 +57,18 @@ class MenuFragment : Fragment() {
                 val productBinding = ProductContainerBinding.inflate(layoutInflater)
                 val productNameTextView = productBinding.productName
                 val productPriceTextView = productBinding.productPrice
+                val productImageView = productBinding.productImage // Assuming this is your ImageView
                 val addToCartButton = productBinding.addToCartButton
 
                 productNameTextView.text = product.name
-                productPriceTextView.text = product.price.toString()
+                productPriceTextView.text = ("£" + product.price.toString())
+
+                // Use Glide to load the product image from the URL
+                Glide.with(this)
+                    .load(product.image) // Assuming 'image' is the URL stored in ProductImage column
+                    .placeholder(R.drawable.ic_launcher_foreground) // Optional: a placeholder image
+                    .error(R.drawable.ic_launcher_foreground) // Optional: an error image
+                    .into(productImageView)
 
                 addToCartButton.setOnClickListener {
                     cartViewModel.addToCart(product)
@@ -67,11 +76,9 @@ class MenuFragment : Fragment() {
 
                 binding.categoryContainer.addView(productBinding.root)
             }
-
             containerForCategories.addView(binding.root)
         }
     }
-
 
     private fun setupCategoryNavigation() {
         view?.findViewById<TextView>(R.id.buttonTea)?.setOnClickListener { scrollToCategory("Tea") }
@@ -80,7 +87,6 @@ class MenuFragment : Fragment() {
         view?.findViewById<TextView>(R.id.buttonSnacks)?.setOnClickListener { scrollToCategory("Snacks") }
         view?.findViewById<TextView>(R.id.buttonMerch)?.setOnClickListener { scrollToCategory("Merchandise") }
     }
-
 
     private fun scrollToCategory(category: String) {
         val categoryContainerView = containerForCategories.findViewWithTag<View>(category)

@@ -50,5 +50,10 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="update_info">Update Information</string>
+    <string name="accountsettings">Account Settings</string>
+    <string name="order_status_pending">Order Status: </string>
+    <string name="order_details">Order Details:</string>
+    <string name="total_price_0_00">Total Price: £</string>
+    <string name="payment_method_n_a">"Payment Method: "</string>
 
 </resources>

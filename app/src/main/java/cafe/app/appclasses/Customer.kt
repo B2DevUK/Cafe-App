@@ -7,5 +7,6 @@ data class Customer(
     val phoneNo: String,
     val userName: String,
     val password: String,
-    val isActive: Int
+    val isActive: Int,
+    val firebaseUid: String
 )

@@ -33,12 +33,14 @@
                 android:id="@+id/productName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/pacifico"
                 android:text="@string/product_name" />
 
             <TextView
                 android:id="@+id/productPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/pacifico"
                 android:text="@string/product_price" />
         </LinearLayout>
 
@@ -46,10 +48,11 @@
             android:id="@+id/addToCartButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/add_to_cart"
             android:layout_gravity="center_vertical"
             android:clickable="true"
-            android:focusable="true" />
+            android:focusable="true"
+            android:fontFamily="@font/pacifico"
+            android:text="@string/add_to_cart" />
 
     </LinearLayout>
 
