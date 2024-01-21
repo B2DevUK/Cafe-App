@@ -34,7 +34,6 @@ class AccountCreationPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.account_creation_page)
 
-        // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
@@ -42,22 +41,18 @@ class AccountCreationPage : AppCompatActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        // Initialize Firebase Auth
         auth = FirebaseAuth.getInstance()
 
-        // Google Sign-In Button Listener
         findViewById<Button>(R.id.accountCreation_loginWithGoogle).setOnClickListener {
             val signInIntent = googleSignInClient.signInIntent
             signInResultLauncher.launch(signInIntent)
         }
 
-        // Normal Login Button Listener
         findViewById<Button>(R.id.accountCreation_loginButton).setOnClickListener {
             val intent = Intent(this, LoginAccount::class.java)
             startActivity(intent)
         }
 
-        // Create Account Button Listener
         findViewById<Button>(R.id.accountCreation_createAccountButton).setOnClickListener {
             val intent = Intent(this, CreateAccount::class.java)
             startActivity(intent)
@@ -86,12 +81,10 @@ class AccountCreationPage : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Redirect to Dashboard Activity
                     val intent = Intent(this, Dashboard::class.java)
                     startActivity(intent)
-                    finish() // Optional: Close this activity
+                    finish()
                 } else {
-                    // Error Handling Toast
                     task.exception?.let {
                         showToast("Authentication failed: ${it.localizedMessage}")
                     }
