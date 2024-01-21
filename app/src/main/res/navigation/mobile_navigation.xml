@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="cafe.app.ui.menu.MenuFragment"
-        android:label="@string/menu_home"
+        android:label="Home"
         tools:layout="@layout/fragment_menu" />
 
     <fragment
@@ -22,4 +22,11 @@
         android:name="cafe.app.ui.notifications.NotificationsFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/nav_admin"
+        android:name="cafe.app.ui.admin.AdminFragment"
+        android:label="Admin"
+        tools:layout="@layout/fragment_admin_panel"
+        />
 </navigation>

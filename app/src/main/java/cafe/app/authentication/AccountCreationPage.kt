@@ -58,6 +58,7 @@ class AccountCreationPage : AppCompatActivity() {
             startActivity(intent)
         }
 
+        importAdminFromCSV()
         importProductsFromCSV()
     }
 
@@ -65,6 +66,12 @@ class AccountCreationPage : AppCompatActivity() {
         val databaseHelper = DBHelper(this)
         databaseHelper.importProductsFromCSV(this)
     }
+
+    private fun importAdminFromCSV() {
+        val databaseHelper = DBHelper(this)
+        databaseHelper.importAdminFromCSV(this)
+    }
+
 
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
