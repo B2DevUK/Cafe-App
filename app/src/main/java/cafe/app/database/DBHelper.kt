@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import cafe.app.appclasses.Customer
 import cafe.app.appclasses.Product
 import java.io.BufferedReader
 import java.io.IOException
@@ -395,6 +396,37 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
 
     // OTHER FUNCTIONS
 
+    // CUSTOMERS
+    fun fetchUserDetails(userId: String): Customer? {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            "TCustomer",
+            null,
+            "CusId = ?",
+            arrayOf(userId),
+            null,
+            null,
+            null
+        )
+        with(cursor) {
+            if (moveToFirst()) {
+                val customer = Customer(
+                    id = getInt(getColumnIndexOrThrow("CusId")),
+                    fullName = getString(getColumnIndexOrThrow("CusFullName")),
+                    email = getString(getColumnIndexOrThrow("CusEmail")),
+                    phoneNo = getString(getColumnIndexOrThrow("CusPhoneNo")),
+                    userName = getString(getColumnIndexOrThrow("CusUserName")),
+                    password = getString(getColumnIndexOrThrow("CusPassword")),
+                    isActive = getInt(getColumnIndexOrThrow("CusIsActive"))
+                )
+                close()
+                return customer
+            }
+        }
+        cursor.close()
+        return null
+    }
+
     // PRODUCTS
     fun importProductsFromCSV(context: Context) {
         val db = this.writableDatabase
@@ -409,18 +441,17 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
             while (line != null) {
                 val tokens = line.split(",")
                 if (tokens.size >= 5) {
-                    // Check if the product already exists
                     val cursor = db.query(
                         "TProduct",
-                        arrayOf("ProductName"), // Columns to return
-                        "ProductName = ?", // Selection criteria
-                        arrayOf(tokens[0]), // Selection args (the product name)
+                        arrayOf("ProductName"),
+                        "ProductName = ?",
+                        arrayOf(tokens[0]),
                         null,
                         null,
                         null
                     )
 
-                    if (!cursor.moveToFirst()) { // If the product does not exist, insert it
+                    if (!cursor.moveToFirst()) {
                         val contentValues = ContentValues().apply {
                             put("ProductName", tokens[0])
                             put("ProductPrice", tokens[1].toDouble())
