@@ -5,6 +5,7 @@ import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
+import cafe.app.appclasses.Product
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -444,4 +445,32 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
             db.close()
         }
     }
+
+    fun getAllProductsByCategory(): Map<String, List<Product>> {
+        val db = this.readableDatabase
+        val productsByCategory = mutableMapOf<String, MutableList<Product>>()
+
+        val cursor = db.query("TProduct", null, null, null, null, null, null)
+        while (cursor.moveToNext()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow("ProductID"))
+            val name = cursor.getString(cursor.getColumnIndexOrThrow("ProductName"))
+            val price = cursor.getDouble(cursor.getColumnIndexOrThrow("ProductPrice"))
+            val image = cursor.getString(cursor.getColumnIndexOrThrow("ProductImage"))
+            val isAvailable = cursor.getInt(cursor.getColumnIndexOrThrow("ProductAvailable"))
+            val category = cursor.getString(cursor.getColumnIndexOrThrow("ProductCategory"))
+
+            val product = Product(id, name, price, image, isAvailable, category)
+
+            if (productsByCategory[category] == null) {
+                productsByCategory[category] = mutableListOf(product)
+            } else {
+                productsByCategory[category]?.add(product)
+            }
+        }
+        cursor.close()
+        db.close()
+
+        return productsByCategory
+    }
+
 }

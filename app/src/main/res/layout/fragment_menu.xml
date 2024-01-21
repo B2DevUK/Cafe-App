@@ -27,6 +27,12 @@
             style="@style/NavigationButtonStyle"
             android:text="@string/coffee" />
 
+        <!-- Button for Cakes -->
+        <TextView
+            android:id="@+id/buttonCakes"
+            style="@style/NavigationButtonStyle"
+            android:text="@string/cakes" />
+
         <!-- Button for Snacks -->
         <TextView
             android:id="@+id/buttonSnacks"
@@ -62,6 +68,10 @@
             <include layout="@layout/category_container"
                 android:id="@+id/containerCoffeeMenu"
                 android:tag="coffee"/>
+
+            <include layout="@layout/category_container"
+                android:id="@+id/containerCakesMenu"
+                android:tag="@string/cakes"/>
 
             <include layout="@layout/category_container"
                 android:id="@+id/containerSnacksMenu"

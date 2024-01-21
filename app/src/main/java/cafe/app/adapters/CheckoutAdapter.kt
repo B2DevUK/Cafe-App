@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import cafe.app.R
 import cafe.app.appclasses.CartItem
+import cafe.app.R
 import cafe.app.databinding.CartItemLayoutBinding
 
 class CheckoutAdapter(
@@ -65,7 +65,6 @@ class CheckoutAdapter(
 
         fun bind(cartItem: CartItem) {
             binding.productName.text = cartItem.product.name // Set product name
-            binding.productDescription.text = cartItem.product.description // Set product description
             binding.productPrice.text = String.format(
                 context.getString(R.string.price_placeholder),
                 cartItem.product.price

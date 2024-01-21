@@ -4,152 +4,108 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import cafe.app.R
 import cafe.app.adapters.CheckoutAdapter
-import cafe.app.appclasses.Order
-import cafe.app.appclasses.OrderItem
-import cafe.app.appclasses.CartItem
-import cafe.app.database.OrdersDatabaseHelper
-import cafe.app.database.ProductDatabaseHelper
+import cafe.app.database.DBHelper
 import cafe.app.databinding.FragmentCheckoutBinding
+import cafe.app.appclasses.CartItem
+import com.google.firebase.auth.FirebaseAuth
+import java.text.SimpleDateFormat
+import java.util.*
 
 class CheckoutFragment : Fragment() {
 
     private lateinit var checkoutViewModel: CheckoutViewModel
     private lateinit var checkoutAdapter: CheckoutAdapter
-    private lateinit var totalPriceTextView: TextView
-    private lateinit var checkoutButton: Button
+    private lateinit var binding: FragmentCheckoutBinding
+    private lateinit var dbHelper: DBHelper
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val binding = FragmentCheckoutBinding.inflate(inflater, container, false)
-        val root = binding.root
+    private val user = FirebaseAuth.getInstance().currentUser
+    val customerId = user?.uid
 
-        checkoutViewModel = ViewModelProvider(requireActivity()).get(CheckoutViewModel::class.java)
 
-        totalPriceTextView = binding.totalPriceTextView
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+        binding = FragmentCheckoutBinding.inflate(inflater, container, false)
+        dbHelper = DBHelper(requireContext())
 
+        checkoutViewModel = ViewModelProvider(requireActivity())[CheckoutViewModel::class.java]
+        setupRecyclerView()
+        setupCheckoutButton()
+
+        checkoutViewModel.cartItems.observe(viewLifecycleOwner) { cartItemsMap ->
+            val cartItemsList = cartItemsMap.values.toList()
+            checkoutAdapter.submitList(cartItemsList)
+            updateTotalPrice(cartItemsMap)
+        }
+
+        return binding.root
+    }
+
+    private fun setupRecyclerView() {
         checkoutAdapter = CheckoutAdapter(requireContext(),
-            incrementClickListener = { cartItem ->
-                checkoutViewModel.incrementCartItem(cartItem)
+            incrementClickListener = { cartItem: CartItem ->
+                checkoutViewModel.incrementCartItem(cartItem.product)
             },
-            decrementClickListener = { cartItem ->
-                checkoutViewModel.decrementCartItem(cartItem)
+            decrementClickListener = { cartItem: CartItem ->
+                checkoutViewModel.decrementCartItem(cartItem.product)
             },
-            removeClickListener = { cartItem ->
-                checkoutViewModel.removeFromCart(cartItem)
+            removeClickListener = { cartItem: CartItem ->
+                checkoutViewModel.removeFromCart(cartItem.product)
             }
         )
-
-        val recyclerView: RecyclerView = binding.checkoutRecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.adapter = checkoutAdapter
-
-        checkoutButton = binding.checkoutButton
-
-        checkoutButton.setOnClickListener {
-            val cartItems = checkoutAdapter.currentList
-            val customerId: Long = 1L // Explicitly define as Long
-
-            val order = createOrderFromCart(cartItems, customerId)
-
-            val dbHelper = OrdersDatabaseHelper(requireContext())
-            val orderId = dbHelper.addOrder(order)
-
-            if (orderId > 0) {
-                showOrderConfirmation()
-            } else {
-                showError()
-            }
+        binding.checkoutRecyclerView.apply {
+            layoutManager = LinearLayoutManager(context)
+            adapter = checkoutAdapter
         }
-
-
-        checkoutViewModel.cartItems.observe(viewLifecycleOwner) { cartItems ->
-            checkoutAdapter.submitList(cartItems)
-
-            val totalPrice = checkoutAdapter.calculateTotalPrice()
-            totalPriceTextView.text = getString(R.string.total_price, totalPrice)
-        }
-
-        return root
     }
 
-    fun mapCartItemsToOrderItems(cartItems: List<CartItem>): List<OrderItem> {
-        val orderItems = mutableListOf<OrderItem>()
-        val productQuantityMap = mutableMapOf<String, Int>() // Map to store product names and their quantities
-
-        val productsDatabaseHelper = ProductDatabaseHelper(requireContext())
-
-        for (cartItem in cartItems) {
-            val productName = cartItem.product.name // Fetch the product name from the cart item
-
-            // Fetch the product ID from the database based on the product name
-            val product = productsDatabaseHelper.getProductByName(productName)
-
-            if (product != null) {
-                val productId = product.id
-                val quantity = cartItem.quantity
-                val price = product.price * quantity
-
-                // Check if the product name is already in the map
-                if (productQuantityMap.containsKey(productName)) {
-                    // If it is, update the quantity by adding the new quantity
-                    val updatedQuantity = productQuantityMap[productName]!! + quantity
-                    productQuantityMap[productName] = updatedQuantity
-                } else {
-                    // If it's not, add the product name and quantity to the map
-                    productQuantityMap[productName] = quantity
-                }
+    private fun setupCheckoutButton() {
+        binding.checkoutButton.setOnClickListener {
+            val cartItems = checkoutViewModel.cartItems.value ?: return@setOnClickListener
+            if (cartItems.isEmpty()) {
+                Toast.makeText(context, "Cart is empty", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+            createOrderFromCart(cartItems, 1)
         }
-
-        // Iterate through the map and create OrderItems
-        for ((productName, quantity) in productQuantityMap) {
-            // Fetch the product from the database based on the product name
-            val product = productsDatabaseHelper.getProductByName(productName)
-
-            if (product != null) {
-                val productId = product.id.toLong() // Convert to Long
-                val price = product.price * quantity
-
-                val orderItem = OrderItem(productId, quantity, price)
-                orderItems.add(orderItem)
-            }
-        }
-
-        return orderItems
     }
 
-    fun createOrderFromCart(cartItems: List<CartItem>, customerId: Long): Order {
-        val orderItems = mapCartItemsToOrderItems(cartItems) // Use the existing function to map cart items to order items
-        val totalPrice = orderItems.sumOf { it.price }
+    private fun createOrderFromCart(cartItems: Map<Int, CartItem>, customerId: Int) {
+        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
+        val orderId = if (customerId != null) {
+            dbHelper.addOrder(customerId, currentDate, currentTime, 1)
+        } else {
+            return
+        }
 
-        val order = Order(
-            orderId = 0L, // Ensure this is treated as a Long by appending 'L'
-            customerId = customerId, // Now correctly a Long
-            orderItems = orderItems,
-            orderPrice = totalPrice,
-            orderStatus = 1 // Assuming this is a predefined status code, no type issue here
-        )
-        return order
+
+        if (orderId > 0) {
+            cartItems.values.forEach { cartItem ->
+                dbHelper.addOrderDetail(orderId.toInt(), cartItem.product.id, cartItem.quantity, cartItem.quantity * cartItem.product.price)
+            }
+            checkoutViewModel.clearCart()
+            showOrderConfirmation()
+        } else {
+            showError()
+        }
+    }
+
+    private fun updateTotalPrice(cartItems: Map<Int, CartItem>) {
+        val totalPrice = cartItems.values.sumOf { it.quantity * it.product.price }
+        binding.totalPriceTextView.text = getString(R.string.total_price, totalPrice)
     }
 
     private fun showOrderConfirmation() {
-        // You can show a confirmation message or navigate to a confirmation page
-        // Example: Toast.makeText(requireContext(), "Order placed successfully!", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Order placed successfully!", Toast.LENGTH_SHORT).show()
+        // Navigate away or refresh the fragment to clear the cart view
     }
 
     private fun showError() {
-        // You can show an error message to the user
-        // Example: Toast.makeText(requireContext(), "Failed to place the order. Please try again.", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Failed to place the order. Please try again.", Toast.LENGTH_SHORT).show()
     }
 }

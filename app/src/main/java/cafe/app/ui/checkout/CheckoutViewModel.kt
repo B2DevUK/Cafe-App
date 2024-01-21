@@ -3,63 +3,65 @@ package cafe.app.ui.checkout
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import cafe.app.appclasses.Product
 import cafe.app.appclasses.CartItem
 
 class CheckoutViewModel : ViewModel() {
+    private val _cartItems = MutableLiveData<MutableMap<Int, CartItem>>()
+    val cartItems: LiveData<MutableMap<Int, CartItem>> = _cartItems
 
-    private val _cartItems = MutableLiveData<List<CartItem>>()
-    val cartItems: LiveData<List<CartItem>> = _cartItems
-
-    // Initialize the cart as an empty list
     init {
-        _cartItems.value = emptyList()
+        _cartItems.value = mutableMapOf()
     }
 
     // Add a product to the cart
-    fun addToCart(item: CartItem) {
-        val currentCart = _cartItems.value?.toMutableList() ?: mutableListOf()
-        currentCart.add(item)
-        _cartItems.value = currentCart
+    fun addToCart(product: Product) {
+        val currentItems = _cartItems.value ?: mutableMapOf()
+        currentItems[product.id]?.let {
+            it.quantity += 1
+        } ?: run {
+            currentItems[product.id] = CartItem(product, 1)
+        }
+        _cartItems.value = currentItems
     }
 
     // Remove a product from the cart
-    fun removeFromCart(item: CartItem) {
-        val currentCart = _cartItems.value?.toMutableList() ?: mutableListOf()
-        currentCart.remove(item)
-        _cartItems.value = currentCart
-    }
-
-    // Update the quantity of a product in the cart
-    fun updateCartItem(item: CartItem) {
-        val currentCart = _cartItems.value?.toMutableList() ?: mutableListOf()
-        val index = currentCart.indexOfFirst { it.id == item.id }
-        if (index != -1) {
-            currentCart[index] = item
-        }
+    fun removeFromCart(product: Product) {
+        val currentCart = _cartItems.value ?: mutableMapOf()
+        currentCart.remove(product.id)
         _cartItems.value = currentCart
     }
 
     // Increment the quantity of a cart item
-    fun incrementCartItem(cartItem: CartItem) {
-        val currentCart = _cartItems.value?.toMutableList() ?: mutableListOf()
-        val index = currentCart.indexOf(cartItem)
-        if (index != -1) {
-            currentCart[index] = cartItem.copy(quantity = cartItem.quantity + 1)
+    fun incrementCartItem(product: Product) {
+        val currentCart = _cartItems.value ?: mutableMapOf()
+        currentCart[product.id]?.let {
+            it.quantity += 1
+            _cartItems.value = currentCart
+        } ?: run {
+            currentCart[product.id] = CartItem(product, 1)
             _cartItems.value = currentCart
         }
     }
 
     // Decrement the quantity of a cart item
-    fun decrementCartItem(cartItem: CartItem) {
-        val currentCart = _cartItems.value?.toMutableList() ?: mutableListOf()
-        val index = currentCart.indexOf(cartItem)
-        if (index != -1) {
+    fun decrementCartItem(product: Product) {
+        val currentCart = _cartItems.value ?: mutableMapOf()
+        currentCart[product.id]?.let { cartItem ->
             if (cartItem.quantity > 1) {
-                currentCart[index] = cartItem.copy(quantity = cartItem.quantity - 1)
+                cartItem.quantity -= 1
+                _cartItems.value = currentCart
             } else {
-                currentCart.removeAt(index)
+                currentCart.remove(product.id)
+                _cartItems.value = currentCart
             }
-            _cartItems.value = currentCart
         }
     }
+
+    // Clear the cart
+    fun clearCart() {
+        _cartItems.value?.clear()
+        _cartItems.value = _cartItems.value
+    }
+
 }
