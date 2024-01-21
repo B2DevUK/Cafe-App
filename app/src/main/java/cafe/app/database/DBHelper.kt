@@ -400,6 +400,74 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
 
     // OTHER FUNCTIONS
 
+    // ADMIN
+    fun importAdminFromCSV (context: Context) {
+        val db = this.writableDatabase
+        var bufferedReader: BufferedReader? = null
+
+        try {
+            val inputStream = context.assets.open("admins2.csv")
+            bufferedReader = BufferedReader(InputStreamReader(inputStream))
+            bufferedReader.readLine() // Skip the header line
+
+            var line: String? = bufferedReader.readLine()
+            while (line != null) {
+                val tokens = line.split(",")
+                if (tokens.size >= 5) {
+                    val cursor = db.query(
+                        "TAdmin",
+                        arrayOf("AdminFullName"),
+                        "AdminFullName = ?",
+                        arrayOf(tokens[0]),
+                        null,
+                        null,
+                        null
+                    )
+
+                    if (!cursor.moveToFirst()) {
+                        val contentValues = ContentValues().apply {
+                            put("AdminFullName", tokens[0])
+                            put("AdminEmail", tokens[1])
+                            put("AdminPhoneNo", tokens[2])
+                            put("AdminUserName", tokens[3])
+                            put("AdminPassword", tokens[4])
+                            put("AdminIsActive", tokens[5].toInt())
+                        }
+                        db.insert("TAdmin", null, contentValues)
+                    }
+                    cursor.close()
+                }
+                line = bufferedReader.readLine()
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } finally {
+            try {
+                bufferedReader?.close()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+            db.close()
+        }
+    }
+
+    fun adminCheck(email: String): Boolean {
+
+        // val admin = dbHelper.getAdminByEmail(email)
+        val db = this.readableDatabase
+        // val adminEmail = admin?.email
+        val cursor : Cursor = db.query(
+            "TAdmin",
+            null,
+            "${"AdminEmail"} = ?",
+            arrayOf(email),
+            null,
+            null,
+            null
+        )
+        return cursor.moveToFirst()
+    }}
+
     // CUSTOMERS
     fun fetchUserDetails(userId: String): Customer? {
         val db = this.readableDatabase

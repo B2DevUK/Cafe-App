@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/adminBar"
+        android:layout_width="412dp"
+        android:layout_height="61dp"
+        android:background="@color/colorPrimaryVariant"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp">
+
+        <Button
+            android:id="@+id/buttonMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryVariant"
+            android:text="Button" />
+
+        <Button
+            android:id="@+id/buttonOrder"
+            android:layout_width="wrap_content"
+            android:layout_height="61dp"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryVariant"
+            android:text="Button" />
+
+        <Button
+            android:id="@+id/buttonReviews"
+            android:layout_width="wrap_content"
+            android:layout_height="61dp"
+            android:layout_weight="1"
+            android:background="@color/colorPrimaryVariant"
+            android:text="Button" />
+    </LinearLayout><![CDATA[
+
+ //  //
+    />//    android:id="@+id/adminView"
+    />//    android:name="cafe.app.ui.admin.AdminFragment"
+     />//   android:layout_width="411dp"
+     />//   android:layout_height="659dp"
+     />//   tools:layout_editor_absoluteX="-2dp"
+     //   tools:layout_editor_absoluteY="67dp" />
+]]>
+</androidx.constraintlayout.widget.ConstraintLayout>
