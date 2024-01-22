@@ -1,3 +1,5 @@
+@file:Suppress("KDocUnresolvedReference")
+
 package cafe.app.authentication
 
 import android.content.Intent
@@ -18,11 +20,31 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 
+/**
+ * [AccountCreationPage]
+ * Description: Activity responsible for handling user authentication and account creation.
+ *
+ * [Author]
+ * Author Name: Brandon Sharp
+ *
+ * [Properties]
+ * - [googleSignInClient]: GoogleSignInClient instance for handling Google Sign-In.
+ * - [auth]: FirebaseAuth instance for Firebase authentication.
+ * - [signInResultLauncher]: Activity result launcher for Google Sign-In.
+ *
+ * [Methods]
+ * - [onCreate]: Initializes the activity and sets up UI components and click listeners.
+ * - [importProductsFromCSV]: Imports product data from a CSV file into the database.
+ * - [importAdminFromCSV]: Imports admin data from a CSV file into the database.
+ * - [handleSignInResult]: Handles the result of Google Sign-In, authenticates with Firebase.
+ * - [firebaseAuthWithGoogle]: Performs Firebase authentication with the provided Google credentials.
+ * - [showToast]: Displays a Toast message with the given message text.
+ */
 class AccountCreationPage : AppCompatActivity() {
 
+    // Properties
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var auth: FirebaseAuth
-
     private val signInResultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -30,6 +52,11 @@ class AccountCreationPage : AppCompatActivity() {
         handleSignInResult(task)
     }
 
+    /**
+     * [onCreate]
+     * Description: Initializes the activity and sets up UI components and click listeners.
+     * - [gso]: GoogleSignInOptions for configuring Google Sign-In.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.account_creation_page)
@@ -40,9 +67,9 @@ class AccountCreationPage : AppCompatActivity() {
             .build()
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
-
         auth = FirebaseAuth.getInstance()
 
+        // Set up click listeners for buttons
         findViewById<Button>(R.id.accountCreation_loginWithGoogle).setOnClickListener {
             val signInIntent = googleSignInClient.signInIntent
             signInResultLauncher.launch(signInIntent)
@@ -58,21 +85,38 @@ class AccountCreationPage : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Import data from CSV files into the database
         importAdminFromCSV()
         importProductsFromCSV()
     }
 
+    /**
+     * [importProductsFromCSV]
+     * Description: Imports product data from a CSV file into the database.
+     */
     private fun importProductsFromCSV() {
         val databaseHelper = DBHelper(this)
         databaseHelper.importProductsFromCSV(this)
     }
 
+    /**
+     * [importAdminFromCSV]
+     *
+     * [Author]
+     * Author Name: Jamie Clarke
+     *
+     * Description: Imports admin data from a CSV file into the database.
+     */
     private fun importAdminFromCSV() {
         val databaseHelper = DBHelper(this)
         databaseHelper.importAdminFromCSV(this)
     }
 
-
+    /**
+     * [handleSignInResult]
+     * Description: Handles the result of Google Sign-In, authenticates with Firebase.
+     * - [completedTask]: Task containing the result of Google Sign-In.
+     */
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
@@ -83,6 +127,11 @@ class AccountCreationPage : AppCompatActivity() {
         }
     }
 
+    /**
+     * [firebaseAuthWithGoogle]
+     * Description: Performs Firebase authentication with the provided Google credentials.
+     * - [idToken]: Google ID token obtained from Google Sign-In.
+     */
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
@@ -99,6 +148,11 @@ class AccountCreationPage : AppCompatActivity() {
             }
     }
 
+    /**
+     * [showToast]
+     * Description: Displays a Toast message with the given message text.
+     * - [message]: The message to be displayed in the Toast.
+     */
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
@@ -107,3 +161,4 @@ class AccountCreationPage : AppCompatActivity() {
         private const val RC_SIGN_IN = 9001
     }
 }
+
