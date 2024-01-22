@@ -55,5 +55,12 @@
     <string name="order_details">Order Details:</string>
     <string name="total_price_0_00">Total Price: £</string>
     <string name="payment_method_n_a">"Payment Method: "</string>
+    <string name="card_number">Card Number</string>
+    <string name="expiry_date">Expiry Date</string>
+    <string name="security_cvc">Security CVC</string>
+    <string name="cart_empty">Empty Cart</string>
+    <string name="fill_in_card_details">Fill In Card Details</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
 
 </resources>

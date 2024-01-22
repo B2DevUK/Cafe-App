@@ -1,49 +1,113 @@
-<!-- cart_fragment.xml -->
-
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="cafe.app.ui.cart.CartFragment">
+        tools:context=".ui.cart.CartFragment">
 
         <!-- RecyclerView for Cart Items -->
+
+        <!-- Checkout Button -->
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/checkoutRecyclerView"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toTopOf="@id/checkoutButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
 
-        <!-- Checkout Button -->
         <Button
             android:id="@+id/checkoutButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:fontFamily="@font/pacifico"
             android:text="Proceed to Checkout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <TextView
-            android:id="@+id/totalPriceTextView"
-            android:layout_width="wrap_content"
+        <!-- Payment Method RadioGroup -->
+
+        <RadioGroup
+            android:id="@+id/paymentMethodRadioGroup"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:fontFamily="@font/pacifico"
-            android:text="@string/total_price"
-            app:layout_constraintBottom_toTopOf="@id/checkoutButton"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/checkoutButton"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <RadioButton
+                android:id="@+id/payByCashRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pacifico"
+                android:text="Pay by Cash" />
+
+            <RadioButton
+                android:id="@+id/payByCardRadioButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pacifico"
+                android:text="Pay by Card" />
+
+            <TextView
+                android:id="@+id/totalPriceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/pacifico"
+                android:text="@string/total_price"
+                android:layout_marginLeft="50px"
+                tools:layout_editor_absoluteX="262dp"
+                tools:layout_editor_absoluteY="647dp" />
+
+        </RadioGroup>
+
+        <!-- Card Details Input Layout -->
+
+        <LinearLayout
+            android:id="@+id/cardDetailsInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/paymentMethodRadioGroup"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintBottom_toTopOf="@id/checkoutButton">
 
+            <!-- Input fields for card number, expiry date, security number, and full name -->
+            <EditText
+                android:id="@+id/cardNumberEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/card_number"
+                android:inputType="number" />
+            <EditText
+                android:id="@+id/cardExpiryDateEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/expiry_date" />
+            <EditText
+                android:id="@+id/cardSecurityNumberEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/security_cvc"
+                android:inputType="number" />
+            <EditText
+                android:id="@+id/cardFullNameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/full_name"
+                android:inputType="number" />
 
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </layout>
-

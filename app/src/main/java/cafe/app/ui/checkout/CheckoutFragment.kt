@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import cafe.app.R
 import cafe.app.adapters.CheckoutAdapter
+import cafe.app.appclasses.CardDetails
 import cafe.app.database.DBHelper
 import cafe.app.databinding.FragmentCheckoutBinding
 import cafe.app.appclasses.CartItem
@@ -25,8 +26,7 @@ class CheckoutFragment : Fragment() {
     private lateinit var dbHelper: DBHelper
 
     private val user = FirebaseAuth.getInstance().currentUser
-    val customerId = user?.uid
-
+    private val customerId = user?.uid
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentCheckoutBinding.inflate(inflater, container, false)
@@ -34,7 +34,7 @@ class CheckoutFragment : Fragment() {
 
         checkoutViewModel = ViewModelProvider(requireActivity())[CheckoutViewModel::class.java]
         setupRecyclerView()
-        setupCheckoutButton()
+        setupPaymentMethodSelection()
 
         checkoutViewModel.cartItems.observe(viewLifecycleOwner) { cartItemsMap ->
             val cartItemsList = cartItemsMap.values.toList()
@@ -47,13 +47,13 @@ class CheckoutFragment : Fragment() {
 
     private fun setupRecyclerView() {
         checkoutAdapter = CheckoutAdapter(requireContext(),
-            incrementClickListener = { cartItem: CartItem ->
+            incrementClickListener = { cartItem ->
                 checkoutViewModel.incrementCartItem(cartItem.product)
             },
-            decrementClickListener = { cartItem: CartItem ->
+            decrementClickListener = { cartItem ->
                 checkoutViewModel.decrementCartItem(cartItem.product)
             },
-            removeClickListener = { cartItem: CartItem ->
+            removeClickListener = { cartItem ->
                 checkoutViewModel.removeFromCart(cartItem.product)
             }
         )
@@ -63,35 +63,68 @@ class CheckoutFragment : Fragment() {
         }
     }
 
-    private fun setupCheckoutButton() {
-        binding.checkoutButton.setOnClickListener {
-            val cartItems = checkoutViewModel.cartItems.value ?: return@setOnClickListener
-            if (cartItems.isEmpty()) {
-                Toast.makeText(context, "Cart is empty", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+    private fun setupPaymentMethodSelection() {
+        binding.payByCashRadioButton.isChecked = true
+
+        binding.paymentMethodRadioGroup.setOnCheckedChangeListener { _, checkedId ->
+            if (checkedId == R.id.payByCardRadioButton) {
+                showCardDetailsDialog()
             }
-            createOrderFromCart(cartItems, 1)
         }
     }
 
-    private fun createOrderFromCart(cartItems: Map<Int, CartItem>, customerId: Int) {
-        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
-        val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
-        val orderId = if (customerId != null) {
-            dbHelper.addOrder(customerId, currentDate, currentTime, 1)
-        } else {
-            return
+    // This method is called within setupPaymentMethodSelection()
+    private fun showCardDetailsDialog() {
+        val dialogFragment = CardDetailsDialogFragment()
+        dialogFragment.setCardDetailsListener(object : CardDetailsDialogFragment.CardDetailsListener {
+            override fun onCardDetailsEntered(cardDetails: CardDetails) {
+                Toast.makeText(context, "Card details entered: ${cardDetails.cardNumber}", Toast.LENGTH_SHORT).show()
+                // Now you have card details, you can proceed with order creation
+                // Assuming createOrderFromCart() needs to be modified to accept CardDetails
+                createOrderFromCart(checkoutViewModel.cartItems.value ?: emptyMap(), cardDetails)
+            }
+        })
+        dialogFragment.show(parentFragmentManager, "CardDetailsDialog")
+    }
+
+    private fun collectCardDetails(): CardDetails? {
+        val cardNumber = binding.cardNumberEditText.text.toString().trim()
+        val expiryDate = binding.cardExpiryDateEditText.text.toString().trim()
+        val securityNumber = binding.cardSecurityNumberEditText.text.toString().trim()
+        val fullName = binding.cardFullNameEditText.text.toString().trim()
+
+        if (cardNumber.isEmpty() || expiryDate.isEmpty() || securityNumber.isEmpty() || fullName.isEmpty()) {
+            return null
         }
 
+        return CardDetails(cardNumber.toLong(), expiryDate, securityNumber.toInt(), fullName)
+    }
 
-        if (orderId > 0) {
-            cartItems.values.forEach { cartItem ->
-                dbHelper.addOrderDetail(orderId.toInt(), cartItem.product.id, cartItem.quantity, cartItem.quantity * cartItem.product.price)
+    private fun createOrderFromCart(cartItems: Map<Int, CartItem>, cardDetails: CardDetails) {
+        val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
+        val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
+        val customerIdInt = dbHelper.getCustomerIdByFirebaseUid(customerId ?: "")
+        if (customerIdInt != null && customerIdInt > 0) {
+            val orderId = dbHelper.addOrder(customerIdInt, currentDate, currentTime, 1) // Assuming 1 indicates the order status
+            if (orderId > 0) {
+                var totalAmount = 0.0
+                cartItems.values.forEach { cartItem ->
+                    val orderDetailId = dbHelper.addOrderDetail(orderId.toInt(), cartItem.product.id, cartItem.quantity, cartItem.quantity * cartItem.product.price)
+                    if (orderDetailId > 0) {
+                        totalAmount += cartItem.quantity * cartItem.product.price
+                    }
+                }
+
+                // Check payment method
+                val paymentMethod = if (binding.payByCardRadioButton.isChecked) "card" else "cash"
+                // Record payment in the database
+                dbHelper.addPayment(orderId.toInt(), paymentMethod, totalAmount, currentDate)
+
+                checkoutViewModel.clearCart()
+                showOrderConfirmation()
+            } else {
+                showError()
             }
-            checkoutViewModel.clearCart()
-            showOrderConfirmation()
-        } else {
-            showError()
         }
     }
 
@@ -101,8 +134,9 @@ class CheckoutFragment : Fragment() {
     }
 
     private fun showOrderConfirmation() {
-        Toast.makeText(context, "Order placed successfully!", Toast.LENGTH_SHORT).show()
-        // Navigate away or refresh the fragment to clear the cart view
+        Toast.makeText(context, "Order placed successfully! Head to your notifications tab to track your order.", Toast.LENGTH_SHORT).show()
+        // Optionally navigate away or refresh the fragment to clear the cart view
+        binding.payByCashRadioButton.isChecked = true
     }
 
     private fun showError() {

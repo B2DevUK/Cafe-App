@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteOpenHelper
 import cafe.app.appclasses.Customer
 import cafe.app.appclasses.Order
 import cafe.app.appclasses.OrderDetail
+import cafe.app.appclasses.Payment
 import cafe.app.appclasses.Product
 import java.io.BufferedReader
 import java.io.IOException
@@ -466,7 +467,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
             null
         )
         return cursor.moveToFirst()
-    }}
+    }
 
     // CUSTOMERS
     fun fetchUserDetails(userId: String): Customer? {
@@ -720,5 +721,35 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
         }
         cursor.close()
         return orderDetails
+    }
+
+    // PAYMENTS
+
+    // Fetch all payments for a specific order
+    fun getPaymentsForOrder(orderId: Int): List<Payment> {
+        val payments = mutableListOf<Payment>()
+        val db = this.readableDatabase
+        val cursor = db.query(
+            PaymentTableName,
+            null,
+            "$Payment_Column_OrderID = ?",
+            arrayOf(orderId.toString()),
+            null,
+            null,
+            null
+        )
+
+        while (cursor.moveToNext()) {
+            val payment = Payment(
+                id = cursor.getInt(cursor.getColumnIndexOrThrow(Payment_Column_ID)),
+                orderId = cursor.getInt(cursor.getColumnIndexOrThrow(Payment_Column_OrderID)),
+                type = cursor.getString(cursor.getColumnIndexOrThrow(Payment_Column_Type)),
+                amount = cursor.getDouble(cursor.getColumnIndexOrThrow(Payment_Column_Amount)),
+                date = cursor.getString(cursor.getColumnIndexOrThrow(Payment_Column_Date))
+            )
+            payments.add(payment)
+        }
+        cursor.close()
+        return payments
     }
 }
