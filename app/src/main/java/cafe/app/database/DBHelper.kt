@@ -16,7 +16,7 @@ import java.io.InputStreamReader
 
 /* Database Config*/
 private const val DataBaseName = "CourseWorkDB.db"
-private const val ver : Int = 4
+private const val ver : Int = 5
 
 class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null , ver) {
 
