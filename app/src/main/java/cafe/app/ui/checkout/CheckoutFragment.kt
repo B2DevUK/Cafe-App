@@ -106,7 +106,7 @@ class CheckoutFragment : Fragment() {
         dialogFragment.setCardDetailsListener(object : CardDetailsDialogFragment.CardDetailsListener {
             override fun onCardDetailsEntered(cardDetails: CardDetails) {
                 Toast.makeText(context, "Card details entered: ${cardDetails.cardNumber}", Toast.LENGTH_SHORT).show()
-                createOrderFromCart(checkoutViewModel.cartItems.value ?: emptyMap(), cardDetails)
+                createOrderFromCart(checkoutViewModel.cartItems.value ?: emptyMap())
             }
         })
         dialogFragment.show(parentFragmentManager, "CardDetailsDialog")
@@ -125,7 +125,7 @@ class CheckoutFragment : Fragment() {
         return CardDetails(cardNumber.toLong(), expiryDate, securityNumber.toInt(), fullName)
     }
 
-    private fun createOrderFromCart(cartItems: Map<Int, CartItem>, cardDetails: CardDetails) {
+    private fun createOrderFromCart(cartItems: Map<Int, CartItem>) {
         val currentDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(Date())
         val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
         val customerIdInt = dbHelper.getCustomerIdByFirebaseUid(customerId ?: "")

@@ -56,7 +56,7 @@ class CheckoutAdapter(
      *
      * @return The total price of all cart items.
      */
-    fun calculateTotalPrice(): Double {
+    private fun calculateTotalPrice(): Double {
         var totalPrice = 0.0
         currentList.forEach { cartItem ->
             totalPrice += cartItem.product.price * cartItem.quantity

@@ -2,7 +2,7 @@
 
 package cafe.app.adapters
 
-import android.util.Log
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -100,6 +100,7 @@ class NotificationsAdapter(private val dbHelper: DBHelper, private val feedbackL
          *
          * @param order The order to display in the notification.
          */
+        @SuppressLint("SetTextI18n")
         fun bind(order: Order) {
             // Retrieve order details and payment information
             val orderDetails = dbHelper.getOrderDetailsByOrderId(order.id)

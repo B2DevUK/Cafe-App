@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
         <variable
@@ -13,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:baselineAligned="false">
 
         <!-- Left side: Product information -->
         <LinearLayout
@@ -28,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/pacifico"
-                android:text="Product Name"
+                android:text="@string/product_name"
                 android:textSize="24sp"
                 android:textStyle="bold" />
 
@@ -38,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/pacifico"
-                android:text="Price: £0.00"
+                android:text="@string/product_price"
                 android:textSize="18sp" />
 
             <!-- Product Quantity -->
@@ -47,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/pacifico"
-                android:text="Quantity: 0"
+                android:text="@string/quantity_placeholder"
                 android:textSize="18sp" />
 
         </LinearLayout>
@@ -70,16 +69,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pacifico"
-                    android:text="+"
-                    android:textSize="24sp" />
+                    android:text="@string/increment"
+                    android:textSize="24sp"
+                    style="?android:attr/buttonBarButtonStyle" />
 
                 <Button
                     android:id="@+id/decrementButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pacifico"
-                    android:text="-"
-                    android:textSize="24sp" />
+                    android:text="@string/decrement"
+                    android:textSize="24sp"
+                    style="?android:attr/buttonBarButtonStyle" />
             </LinearLayout>
 
             <!-- Remove button below + and - buttons -->
@@ -89,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:fontFamily="@font/pacifico"
-                android:text="Remove"
+                android:text="@string/remove"
                 android:textSize="18sp" />
 
         </LinearLayout>

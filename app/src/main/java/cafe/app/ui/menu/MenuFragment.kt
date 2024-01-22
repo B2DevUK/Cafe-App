@@ -87,7 +87,8 @@ class MenuFragment : Fragment() {
                 val addToCartButton = productBinding.addToCartButton
 
                 productNameTextView.text = product.name
-                productPriceTextView.text = ("£" + product.price.toString())
+                productPriceTextView.text = getString(R.string.product_price, product.price)
+
 
                 // Use Glide to load the product image from the URL
                 Glide.with(this)

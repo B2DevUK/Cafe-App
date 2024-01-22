@@ -16,5 +16,6 @@
         android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="129dp"
-        app:srcCompat="@drawable/cafe_logo" />
+        app:srcCompat="@drawable/cafe_logo"
+        android:contentDescription="@string/the_cafe_logo" />
 </LinearLayout>

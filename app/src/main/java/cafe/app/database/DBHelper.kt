@@ -15,8 +15,8 @@ import java.io.IOException
 import java.io.InputStreamReader
 
 /* Database Config*/
-private val DataBaseName = "CourseWorkDB.db"
-private val ver : Int = 4
+private const val DataBaseName = "CourseWorkDB.db"
+private const val ver : Int = 4
 
 class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null , ver) {
 
@@ -146,11 +146,11 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
         db?.execSQL(sqlCreatePaymentTable)
 
         // Create Feedback Table
-        var sqlCreateFeedbackStatement: String = """
+        val sqlCreateFeedbackStatement: String = """
             CREATE TABLE $FeedbackTableName (
-                ${Feedback_Column_OrderID} INTEGER PRIMARY KEY,
-                ${Feedback_Column_Score} INTEGER NOT NULL,
-                ${Feedback_Column_Comments} TEXT,
+                $Feedback_Column_OrderID INTEGER PRIMARY KEY,
+                $Feedback_Column_Score INTEGER NOT NULL,
+                $Feedback_Column_Comments TEXT,
                 FOREIGN KEY(${Feedback_Column_OrderID}) REFERENCES $OrderTableName($Order_Column_ID)
         )
         """.trimIndent()
@@ -189,115 +189,6 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
         return success
     }
 
-    fun getCustomerById(customerId: Int): Cursor {
-        val db = this.readableDatabase
-        return db.rawQuery("SELECT * FROM TCustomer WHERE CusId = $customerId", null)
-    }
-
-    fun updateCustomer(customerId: Int, fullName: String, email: String, phoneNo: String, userName: String, password: String, isActive: Int): Int {
-        val db = this.writableDatabase
-        val contentValues = ContentValues().apply {
-            put("CusFullName", fullName)
-            put("CusEmail", email)
-            put("CusPhoneNo", phoneNo)
-            put("CusUserName", userName)
-            put("CusPassword", password)
-            put("CusIsActive", isActive)
-        }
-        val success = db.update("TCustomer", contentValues, "CusId = ?", arrayOf(customerId.toString()))
-        db.close()
-        return success
-    }
-
-    fun deleteCustomer(customerId: Int): Int {
-        val db = this.writableDatabase
-        val success = db.delete("TCustomer", "CusId = ?", arrayOf(customerId.toString()))
-        db.close()
-        return success
-    }
-
-    // ADMIN CRUD OPERATIONS
-    fun addAdmin(fullName: String, email: String, phoneNo: String, userName: String, password: String, isActive: Int): Long {
-        val db = this.writableDatabase
-        val contentValues = ContentValues().apply {
-            put("AdminFullName", fullName)
-            put("AdminEmail", email)
-            put("AdminPhoneNo", phoneNo)
-            put("AdminUserName", userName)
-            put("AdminPassword", password)
-            put("AdminIsActive", isActive)
-        }
-        val success = db.insert("TAdmin", null, contentValues)
-        db.close()
-        return success
-    }
-
-    fun getAdminById(adminId: Int): Cursor {
-        val db = this.readableDatabase
-        return db.rawQuery("SELECT * FROM TAdmin WHERE AdminId = $adminId", null)
-    }
-
-    fun updateAdmin(adminId: Int, fullName: String, email: String, phoneNo: String, userName: String, password: String, isActive: Int): Int {
-        val db = this.writableDatabase
-        val contentValues = ContentValues().apply {
-            put("AdminFullName", fullName)
-            put("AdminEmail", email)
-            put("AdminPhoneNo", phoneNo)
-            put("AdminUserName", userName)
-            put("AdminPassword", password)
-            put("AdminIsActive", isActive)
-        }
-        val success = db.update("TAdmin", contentValues, "AdminId = ?", arrayOf(adminId.toString()))
-        db.close()
-        return success
-    }
-
-    fun deleteAdmin(adminId: Int): Int {
-        val db = this.writableDatabase
-        val success = db.delete("TAdmin", "AdminId = ?", arrayOf(adminId.toString()))
-        db.close()
-        return success
-    }
-
-    // PRODUCT CRUD FUNCTIONS
-    fun addProduct(productName: String, productPrice: Double, productImage: String?, productAvailable: Int): Long {
-        val db = this.writableDatabase
-        val contentValues = ContentValues().apply {
-            put("ProductName", productName)
-            put("ProductPrice", productPrice)
-            put("ProductImage", productImage)
-            put("ProductAvailable", productAvailable)
-        }
-        val success = db.insert("TProduct", null, contentValues)
-        db.close()
-        return success
-    }
-
-    fun getProductById(productId: Int): Cursor {
-        val db = this.readableDatabase
-        return db.rawQuery("SELECT * FROM TProduct WHERE ProductID = $productId", null)
-    }
-
-    fun updateProduct(productId: Int, productName: String, productPrice: Double, productImage: String?, productAvailable: Int): Int {
-        val db = this.writableDatabase
-        val contentValues = ContentValues().apply {
-            put("ProductName", productName)
-            put("ProductPrice", productPrice)
-            put("ProductImage", productImage)
-            put("ProductAvailable", productAvailable)
-        }
-        val success = db.update("TProduct", contentValues, "ProductID = ?", arrayOf(productId.toString()))
-        db.close()
-        return success
-    }
-
-    fun deleteProduct(productId: Int): Int {
-        val db = this.writableDatabase
-        val success = db.delete("TProduct", "ProductID = ?", arrayOf(productId.toString()))
-        db.close()
-        return success
-    }
-
     // ORDER CRUD FUNCTIONS
 
     fun addOrder(customerId: Int, orderDate: String, orderTime: String, orderStatus: Int): Long {
@@ -309,31 +200,6 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
             put("OrderStatus", orderStatus)
         }
         val success = db.insert("TOrder", null, contentValues)
-        db.close()
-        return success
-    }
-
-    fun getOrderById(orderId: Int): Cursor {
-        val db = this.readableDatabase
-        return db.rawQuery("SELECT * FROM TOrder WHERE OrderID = $orderId", null)
-    }
-
-    fun updateOrder(orderId: Int, customerId: Int, orderDate: String, orderTime: String, orderStatus: Int): Int {
-        val db = this.writableDatabase
-        val contentValues = ContentValues().apply {
-            put("CustomerID", customerId)
-            put("OrderDate", orderDate)
-            put("OrderTime", orderTime)
-            put("OrderStatus", orderStatus)
-        }
-        val success = db.update("TOrder", contentValues, "OrderID = ?", arrayOf(orderId.toString()))
-        db.close()
-        return success
-    }
-
-    fun deleteOrder(orderId: Int): Int {
-        val db = this.writableDatabase
-        val success = db.delete("TOrder", "OrderID = ?", arrayOf(orderId.toString()))
         db.close()
         return success
     }
@@ -352,31 +218,6 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
         return success
     }
 
-    fun getOrderDetailById(orderDetailId: Int): Cursor {
-        val db = this.readableDatabase
-        return db.rawQuery("SELECT * FROM TOrderDetails WHERE OrderDetailsID = $orderDetailId", null)
-    }
-
-    fun updateOrderDetail(orderDetailId: Int, orderId: Int, productId: Int, quantity: Int, totalPrice: Double): Int {
-        val db = this.writableDatabase
-        val contentValues = ContentValues().apply {
-            put("OrderID", orderId)
-            put("ProductID", productId)
-            put("Quantity", quantity)
-            put("TotalPrice", totalPrice)
-        }
-        val success = db.update("TOrderDetails", contentValues, "OrderDetailsID = ?", arrayOf(orderDetailId.toString()))
-        db.close()
-        return success
-    }
-
-    fun deleteOrderDetail(orderDetailId: Int): Int {
-        val db = this.writableDatabase
-        val success = db.delete("TOrderDetails", "OrderDetailsID = ?", arrayOf(orderDetailId.toString()))
-        db.close()
-        return success
-    }
-
     // PAYMENT CRUD FUNCTIONS
 
     fun addPayment(orderId: Int, paymentType: String, amount: Double, paymentDate: String): Long {
@@ -388,31 +229,6 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
             put("PaymentDate", paymentDate)
         }
         val success = db.insert("TPayment", null, contentValues)
-        db.close()
-        return success
-    }
-
-    fun getPaymentById(paymentId: Int): Cursor {
-        val db = this.readableDatabase
-        return db.rawQuery("SELECT * FROM TPayment WHERE PaymentID = $paymentId", null)
-    }
-
-    fun updatePayment(paymentId: Int, orderId: Int, paymentType: String, amount: Double, paymentDate: String): Int {
-        val db = this.writableDatabase
-        val contentValues = ContentValues().apply {
-            put("OrderID", orderId)
-            put("PaymentType", paymentType)
-            put("Amount", amount)
-            put("PaymentDate", paymentDate)
-        }
-        val success = db.update("TPayment", contentValues, "PaymentID = ?", arrayOf(paymentId.toString()))
-        db.close()
-        return success
-    }
-
-    fun deletePayment(paymentId: Int): Int {
-        val db = this.writableDatabase
-        val success = db.delete("TPayment", "PaymentID = ?", arrayOf(paymentId.toString()))
         db.close()
         return success
     }
@@ -471,21 +287,21 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
     }
 
     fun adminCheck(email: String): Boolean {
-
-        // val admin = dbHelper.getAdminByEmail(email)
         val db = this.readableDatabase
-        // val adminEmail = admin?.email
-        val cursor : Cursor = db.query(
+        val cursor: Cursor = db.query(
             "TAdmin",
             null,
-            "${"AdminEmail"} = ?",
+            "AdminEmail = ?",
             arrayOf(email),
             null,
             null,
             null
         )
-        return cursor.moveToFirst()
+        val isAdmin = cursor.moveToFirst()
+        cursor.close()
+        return isAdmin
     }
+
 
     // CUSTOMERS
     fun fetchUserDetails(userId: String): Customer? {
@@ -577,10 +393,22 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
             null,
             "1"
         )
-        val customerId: Int? = if (cursor.moveToFirst()) cursor.getInt(cursor.getColumnIndex("CusId")) else null
-        cursor.close()
+
+        val customerId: Int? = if (cursor != null && cursor.moveToFirst()) {
+            val columnIndex = cursor.getColumnIndex("CusId")
+            if (columnIndex >= 0) {
+                cursor.getInt(columnIndex)
+            } else {
+                null
+            }
+        } else {
+            null
+        }
+
+        cursor?.close()
         return customerId
     }
+
 
 
     // PRODUCTS
@@ -611,7 +439,7 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
                         val contentValues = ContentValues().apply {
                             put("ProductName", tokens[0])
                             put("ProductPrice", tokens[1].toDouble())
-                            put("ProductImage", if (tokens[2].isNotEmpty()) tokens[2] else null)
+                            put("ProductImage", tokens[2].ifEmpty { null })
                             put("ProductAvailable", tokens[3].toInt())
                             put("ProductCategory", tokens[4])
                         }
@@ -728,48 +556,29 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
         )
         val orderDetails = mutableListOf<OrderDetail>()
         while (cursor.moveToNext()) {
-            val orderDetail = OrderDetail(
-                id = cursor.getInt(cursor.getColumnIndex("OrderDetailsID")),
-                orderId = cursor.getInt(cursor.getColumnIndex("OrderID")),
-                productId = cursor.getInt(cursor.getColumnIndex("ProductID")),
-                quantity = cursor.getInt(cursor.getColumnIndex("Quantity")),
-                totalPrice = cursor.getDouble(cursor.getColumnIndex("TotalPrice"))
-            )
-            orderDetails.add(orderDetail)
+            val idIndex = cursor.getColumnIndex("OrderDetailsID")
+            val orderIdIndex = cursor.getColumnIndex("OrderID")
+            val productIdIndex = cursor.getColumnIndex("ProductID")
+            val quantityIndex = cursor.getColumnIndex("Quantity")
+            val totalPriceIndex = cursor.getColumnIndex("TotalPrice")
+
+            if (idIndex >= 0 && orderIdIndex >= 0 && productIdIndex >= 0 && quantityIndex >= 0 && totalPriceIndex >= 0) {
+                val orderDetail = OrderDetail(
+                    id = cursor.getInt(idIndex),
+                    orderId = cursor.getInt(orderIdIndex),
+                    productId = cursor.getInt(productIdIndex),
+                    quantity = cursor.getInt(quantityIndex),
+                    totalPrice = cursor.getDouble(totalPriceIndex)
+                )
+                orderDetails.add(orderDetail)
+            }
         }
         cursor.close()
         return orderDetails
     }
 
+
     // PAYMENTS
-
-    // Fetch all payments for a specific order
-    fun getPaymentsForOrder(orderId: Int): List<Payment> {
-        val payments = mutableListOf<Payment>()
-        val db = this.readableDatabase
-        val cursor = db.query(
-            PaymentTableName,
-            null,
-            "$Payment_Column_OrderID = ?",
-            arrayOf(orderId.toString()),
-            null,
-            null,
-            null
-        )
-
-        while (cursor.moveToNext()) {
-            val payment = Payment(
-                id = cursor.getInt(cursor.getColumnIndexOrThrow(Payment_Column_ID)),
-                orderId = cursor.getInt(cursor.getColumnIndexOrThrow(Payment_Column_OrderID)),
-                type = cursor.getString(cursor.getColumnIndexOrThrow(Payment_Column_Type)),
-                amount = cursor.getDouble(cursor.getColumnIndexOrThrow(Payment_Column_Amount)),
-                date = cursor.getString(cursor.getColumnIndexOrThrow(Payment_Column_Date))
-            )
-            payments.add(payment)
-        }
-        cursor.close()
-        return payments
-    }
 
     fun getPaymentByOrderId(orderId: Int): Payment? {
         val db = this.readableDatabase
@@ -804,14 +613,6 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
             put(Feedback_Column_Comments, comments)
         }
         return db.insert(FeedbackTableName, null, contentValues).also { db.close() }
-    }
-
-    fun feedbackExists(orderId: Int): Boolean {
-        val db = this.readableDatabase
-        val cursor = db.query(FeedbackTableName, arrayOf(Feedback_Column_OrderID), "$Feedback_Column_OrderID = ?", arrayOf(orderId.toString()), null, null, null)
-        val exists = cursor.moveToFirst()
-        cursor.close()
-        return exists
     }
 
 

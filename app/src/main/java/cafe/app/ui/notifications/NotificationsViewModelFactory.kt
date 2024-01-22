@@ -42,7 +42,6 @@ class NotificationsViewModelFactory(private val context: Context) : ViewModelPro
      */
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(NotificationsViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
             val dbHelper = DBHelper(context)
             return NotificationsViewModel(dbHelper) as T
         }

@@ -19,7 +19,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/colorPrimaryVariant"
-            android:text="Button" />
+            android:text="Button"
+            style="?android:attr/buttonBarButtonStyle" />
 
         <Button
             android:id="@+id/buttonOrder"
@@ -27,7 +28,8 @@
             android:layout_height="61dp"
             android:layout_weight="1"
             android:background="@color/colorPrimaryVariant"
-            android:text="Button" />
+            android:text="Button"
+            style="?android:attr/buttonBarButtonStyle" />
 
         <Button
             android:id="@+id/buttonReviews"
@@ -35,7 +37,8 @@
             android:layout_height="61dp"
             android:layout_weight="1"
             android:background="@color/colorPrimaryVariant"
-            android:text="Button" />
+            android:text="Button"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout><![CDATA[
 
  //  //

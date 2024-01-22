@@ -39,7 +39,7 @@ class AccountSettingsFragment : Fragment() {
      * [onCreateView]
      * Description: Initializes the fragment's view, sets up UI components, and binds data.
      */
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentAccountSettingsBinding.inflate(inflater, container, false)
 
         // Initialize ViewModel with a factory

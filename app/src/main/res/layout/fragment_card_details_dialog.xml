@@ -12,14 +12,17 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/pacifico"
         android:hint="@string/card_number"
-        android:inputType="number" />
+        android:inputType="number"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/cardExpiryDateEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/pacifico"
-        android:hint="@string/expiry_date" />
+        android:hint="@string/expiry_date"
+        android:inputType="text"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/cardSecurityNumberEditText"
@@ -27,14 +30,17 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/pacifico"
         android:hint="@string/security_cvc"
-        android:inputType="number" />
+        android:inputType="number"
+        android:autofillHints="" />
 
     <EditText
         android:id="@+id/cardFullNameEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="@font/pacifico"
-        android:hint="@string/full_name" />
+        android:hint="@string/full_name"
+        android:inputType="text"
+        android:autofillHints="" />
 
     <!-- Confirm and Cancel buttons -->
     <LinearLayout
@@ -49,7 +55,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/pacifico"
-            android:text="@string/confirm" />
+            android:text="@string/ok"
+            style="?android:attr/buttonBarButtonStyle" />
 
         <Button
             android:id="@+id/cancelButton"
@@ -57,7 +64,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:fontFamily="@font/pacifico"
-            android:text="@string/cancel" />
+            android:text="@string/cancel"
+            style="?android:attr/buttonBarButtonStyle" />
     </LinearLayout>
 
 </LinearLayout>

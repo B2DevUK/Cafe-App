@@ -17,7 +17,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/pacifico"
-            android:hint="@string/full_name" />
+            android:hint="@string/full_name"
+            android:inputType="text"
+            android:autofillHints="" />
 
         <EditText
             android:id="@+id/editTextEmail"
@@ -25,7 +27,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/pacifico"
             android:hint="@string/email"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:autofillHints="" />
 
         <EditText
             android:id="@+id/editTextPhoneNo"
@@ -33,14 +36,17 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/pacifico"
             android:hint="@string/phone_number"
-            android:inputType="phone" />
+            android:inputType="phone"
+            android:autofillHints="" />
 
         <EditText
             android:id="@+id/editTextUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/pacifico"
-            android:hint="@string/username" />
+            android:hint="@string/username"
+            android:inputType="text"
+            android:autofillHints="" />
 
         <EditText
             android:id="@+id/editTextPassword"
@@ -48,7 +54,8 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/pacifico"
             android:hint="@string/password"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:autofillHints="" />
 
         <Button
             android:id="@+id/buttonUpdateInfo"

@@ -51,7 +51,7 @@ class AccountSettingsViewModel(private val dbHelper: DBHelper) : ViewModel() {
      * Description: Retrieves the current user's Firebase UID.
      * Returns: Firebase UID as a String, or null if not authenticated.
      */
-    fun getCurrentUserId(): String? {
+    private fun getCurrentUserId(): String? {
         return auth.currentUser?.uid
     }
 
@@ -60,7 +60,7 @@ class AccountSettingsViewModel(private val dbHelper: DBHelper) : ViewModel() {
      * Description: Retrieves the current user's details.
      * Returns: Current user's Customer object or null if not authenticated.
      */
-    fun getCurrentUser(): Customer? {
+    private fun getCurrentUser(): Customer? {
         val userId = getCurrentUserId() ?: return null
         return dbHelper.fetchUserDetails(userId)
     }

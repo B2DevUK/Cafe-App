@@ -36,7 +36,7 @@ class NotificationsFragment : Fragment() {
     private lateinit var binding: FragmentNotificationsBinding
     private lateinit var viewModel: NotificationsViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false)
         val factory = NotificationsViewModelFactory(requireActivity().applicationContext)
         viewModel = ViewModelProvider(this, factory)[NotificationsViewModel::class.java]

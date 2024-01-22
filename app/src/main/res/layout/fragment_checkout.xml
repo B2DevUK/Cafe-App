@@ -29,7 +29,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:fontFamily="@font/pacifico"
-            android:text="Proceed to Checkout"
+            android:text="@string/proceed_to_checkout"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -49,14 +49,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/pacifico"
-                android:text="Pay by Cash" />
+                android:text="@string/pay_by_cash" />
 
             <RadioButton
                 android:id="@+id/payByCardRadioButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/pacifico"
-                android:text="Pay by Card" />
+                android:text="@string/pay_by_card" />
 
             <TextView
                 android:id="@+id/totalPriceTextView"
@@ -64,7 +64,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/pacifico"
                 android:text="@string/total_price"
-                android:layout_marginLeft="50px"
+                android:layout_marginStart="40dp"
                 tools:layout_editor_absoluteX="262dp"
                 tools:layout_editor_absoluteY="647dp" />
 
@@ -89,24 +89,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/card_number"
-                android:inputType="number" />
+                android:inputType="number"
+                android:autofillHints="" />
             <EditText
                 android:id="@+id/cardExpiryDateEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/expiry_date" />
+                android:hint="@string/expiry_date"
+                android:inputType="text"
+                android:autofillHints="" />
             <EditText
                 android:id="@+id/cardSecurityNumberEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/security_cvc"
-                android:inputType="number" />
+                android:inputType="number"
+                android:autofillHints="" />
             <EditText
                 android:id="@+id/cardFullNameEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/full_name"
-                android:inputType="number" />
+                android:inputType="number"
+                android:autofillHints="" />
 
         </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
