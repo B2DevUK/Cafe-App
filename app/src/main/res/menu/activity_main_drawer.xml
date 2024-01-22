@@ -23,6 +23,6 @@
         <item
             android:id="@+id/nav_admin"
             android:icon="@drawable/cafe_logo"
-            android:title="Admin Panel" />
+            android:title="Admin Panel"/>
     </group>
 </menu>

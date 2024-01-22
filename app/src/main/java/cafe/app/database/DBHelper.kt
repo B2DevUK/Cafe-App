@@ -189,6 +189,116 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
         return success
     }
 
+    fun getCustomerById(customerId: Int): Cursor {
+        val db = this.readableDatabase
+        return db.rawQuery("SELECT * FROM TCustomer WHERE CusId = $customerId", null)
+    }
+
+    fun updateCustomer(customerId: Int, fullName: String, email: String, phoneNo: String, userName: String, password: String, isActive: Int): Int {
+        val db = this.writableDatabase
+        val contentValues = ContentValues().apply {
+            put("CusFullName", fullName)
+            put("CusEmail", email)
+            put("CusPhoneNo", phoneNo)
+            put("CusUserName", userName)
+            put("CusPassword", password)
+            put("CusIsActive", isActive)
+        }
+        val success = db.update("TCustomer", contentValues, "CusId = ?", arrayOf(customerId.toString()))
+        db.close()
+        return success
+    }
+
+    fun deleteCustomer(customerId: Int): Int {
+        val db = this.writableDatabase
+        val success = db.delete("TCustomer", "CusId = ?", arrayOf(customerId.toString()))
+        db.close()
+        return success
+    }
+
+    // ADMIN CRUD OPERATIONS
+    fun addAdmin(fullName: String, email: String, phoneNo: String, userName: String, password: String, isActive: Int): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues().apply {
+            put("AdminFullName", fullName)
+            put("AdminEmail", email)
+            put("AdminPhoneNo", phoneNo)
+            put("AdminUserName", userName)
+            put("AdminPassword", password)
+            put("AdminIsActive", isActive)
+        }
+        val success = db.insert("TAdmin", null, contentValues)
+        db.close()
+        return success
+    }
+
+    fun getAdminById(adminId: Int): Cursor {
+        val db = this.readableDatabase
+        return db.rawQuery("SELECT * FROM TAdmin WHERE AdminId = $adminId", null)
+    }
+
+    fun updateAdmin(adminId: Int, fullName: String, email: String, phoneNo: String, userName: String, password: String, isActive: Int): Int {
+        val db = this.writableDatabase
+        val contentValues = ContentValues().apply {
+            put("AdminFullName", fullName)
+            put("AdminEmail", email)
+            put("AdminPhoneNo", phoneNo)
+            put("AdminUserName", userName)
+            put("AdminPassword", password)
+            put("AdminIsActive", isActive)
+        }
+        val success = db.update("TAdmin", contentValues, "AdminId = ?", arrayOf(adminId.toString()))
+        db.close()
+        return success
+    }
+
+    fun deleteAdmin(adminId: Int): Int {
+        val db = this.writableDatabase
+        val success = db.delete("TAdmin", "AdminId = ?", arrayOf(adminId.toString()))
+        db.close()
+        return success
+    }
+
+    // PRODUCT CRUD FUNCTIONS
+    fun addProduct(productName: String, productPrice: Double, productImage: String?, productAvailable: Int): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues().apply {
+            put("ProductName", productName)
+            put("ProductPrice", productPrice)
+            put("ProductImage", productImage)
+            put("ProductAvailable", productAvailable)
+        }
+        val success = db.insert("TProduct", null, contentValues)
+        db.close()
+        return success
+    }
+
+    fun getProductById(productId: Int): Cursor {
+        val db = this.readableDatabase
+        return db.rawQuery("SELECT * FROM TProduct WHERE ProductID = $productId", null)
+    }
+
+    fun updateProduct(productId: Int, productName: String, productPrice: Double, productImage: String?, productAvailable: Int, productCategory: String): Int {
+        val db = this.writableDatabase
+        val contentValues = ContentValues().apply {
+            put("ProductName", productName)
+            put("ProductPrice", productPrice)
+            put("ProductImage", productImage)
+            put("ProductAvailable", productAvailable)
+            put("ProductCategory", productCategory)
+        }
+        val success = db.update("TProduct", contentValues, "ProductID = ?", arrayOf(productId.toString()))
+        db.close()
+        return success
+    }
+
+    fun deleteProduct(productId: Int): Int {
+        val db = this.writableDatabase
+        val success = db.delete("TProduct", "ProductID = ?", arrayOf(productId.toString()))
+        db.close()
+        return success
+    }
+
     // ORDER CRUD FUNCTIONS
 
     fun addOrder(customerId: Int, orderDate: String, orderTime: String, orderStatus: Int): Long {

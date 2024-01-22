@@ -70,15 +70,11 @@ class LoginAccount : AppCompatActivity() {
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
                     // Redirect to Dashboard Activity
-                    val adminCheck: Boolean = dbHelper.adminCheck(email)
-                    val dashboardIntent = Intent(this, Dashboard::class.java)
-                    if (adminCheck) {
+
+                        val dashboardIntent = Intent(this, Dashboard::class.java)
                         startActivity(dashboardIntent)
                         finish()
-                    } else {
-                        startActivity(dashboardIntent)
-                        finish()
-                    }
+
                 } else {
                     Toast.makeText(
                         this,
