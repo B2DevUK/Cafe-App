@@ -52,9 +52,6 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.7.6")
     implementation("androidx.navigation:navigation-ui-ktx:2.7.6")
     implementation("androidx.databinding:databinding-runtime:8.2.1")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 
     // Import the Firebase BoM
     implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
@@ -66,6 +63,20 @@ dependencies {
     // Google Sign-In SDK
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 
+    // Glide for Images
     implementation("com.github.bumptech.glide:glide:4.11.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
+
+    // JUnit
+    testImplementation("junit:junit:4.13.2")
+    // Mockito
+    testImplementation("org.mockito:mockito-core:3.11.2")
+    // AndroidX Test - Core Library
+    androidTestImplementation("androidx.test:core:1.4.0")
+    // AndroidX Test - JUnit
+    androidTestImplementation("androidx.test.ext:junit:1.1.3")
+    // Espresso Core for UI Tests
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    // Mockito Android
+    androidTestImplementation("org.mockito:mockito-android:3.11.2")
 }

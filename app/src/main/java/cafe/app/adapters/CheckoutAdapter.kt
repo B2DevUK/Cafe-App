@@ -70,7 +70,7 @@ class CheckoutAdapter(
      *
      * @param binding: View binding for the cart item layout.
      */
-    inner class CartItemViewHolder(private val binding: CartItemLayoutBinding) :
+    inner class CartItemViewHolder(val binding: CartItemLayoutBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         init {

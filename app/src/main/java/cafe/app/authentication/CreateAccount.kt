@@ -104,4 +104,6 @@ class CreateAccount : AppCompatActivity() {
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
+
+    // TODO: ADD DATA VALIDATION
 }
