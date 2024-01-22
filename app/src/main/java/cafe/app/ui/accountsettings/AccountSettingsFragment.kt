@@ -133,4 +133,3 @@ class AccountSettingsFragment : Fragment() {
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 }
-

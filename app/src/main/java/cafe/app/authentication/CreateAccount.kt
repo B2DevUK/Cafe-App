@@ -12,8 +12,9 @@ import cafe.app.R
 import cafe.app.database.DBHelper
 import com.google.firebase.auth.FirebaseAuth
 
+
 /**
- * [CreateAccount]
+ * CreateAccount
  * Description: Activity responsible for creating a user account with email and password.
  *
  * [Author]
@@ -35,7 +36,7 @@ class CreateAccount : AppCompatActivity() {
     private lateinit var dbHelper: DBHelper
 
     /**
-     * [onCreate]
+     * onCreate
      * Description: Initializes the activity and sets up UI components and click listener.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,8 +57,10 @@ class CreateAccount : AppCompatActivity() {
     }
 
     /**
-     * [createAccount]
+     * createAccount
      * Description: Creates a user account using the provided email and password.
+     *
+     * [Parameters/Arguments]
      * - [email]: User's email address for account creation.
      * - [password]: User's chosen password for account creation.
      * - [userName]: User's chosen username for account creation.
@@ -69,8 +72,11 @@ class CreateAccount : AppCompatActivity() {
                     val firebaseUid = auth.currentUser?.uid ?: ""
                     Toast.makeText(this, "Account created successfully", Toast.LENGTH_SHORT).show()
 
-                    // Add customer data to the database
-                    val newRowId = dbHelper.addCustomer("", email, "", userName, password, 1, firebaseUid)
+                    // Encrypt the password before saving
+                    val encryptedPassword = EncryptionHelper.encrypt(password)
+
+                    // Add customer data to the database with the encrypted password
+                    val newRowId = dbHelper.addCustomer("", email, "", userName, encryptedPassword, 1, firebaseUid)
 
                     if (newRowId != -1L) {
                         Toast.makeText(this, "Customer data saved to database", Toast.LENGTH_SHORT).show()
@@ -89,12 +95,13 @@ class CreateAccount : AppCompatActivity() {
     }
 
     /**
-     * [showToast]
+     * showToast
      * Description: Displays a Toast message with the given message text.
+     *
+     * [Parameters/Arguments]
      * - [message]: The message to be displayed in the Toast.
      */
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 }
-

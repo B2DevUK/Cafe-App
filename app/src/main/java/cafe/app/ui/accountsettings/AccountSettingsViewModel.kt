@@ -7,26 +7,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import cafe.app.appclasses.Customer
+import cafe.app.authentication.EncryptionHelper
 import cafe.app.database.DBHelper
 import com.google.firebase.auth.FirebaseAuth
 
 /**
- * [AccountSettingsViewModel]
+ * AccountSettingsViewModel
  * Description: ViewModel responsible for managing user account settings data.
  *
- * [Author]
- * Author Name: Brandon Sharp
+ * Author: Brandon Sharp
  *
- * [Properties]
- * - [dbHelper]: The DBHelper instance for database operations.
- * - [auth]: Lazy initialization of FirebaseAuth instance.
- * - [currentUser]: LiveData to hold the current user's data.
+ * Properties:
+ * - dbHelper: The DBHelper instance for database operations.
+ * - auth: Lazy initialization of FirebaseAuth instance.
+ * - currentUser: LiveData to hold the current user's data.
  *
- * [Methods]
- * - [loadCurrentUser]: Loads the current user's data and updates [currentUser].
- * - [getCurrentUserId]: Retrieves the current user's Firebase UID.
- * - [getCurrentUser]: Retrieves the current user's details.
- * - [updateUserDetails]: Updates the user's details in the local database and handles errors.
+ * Methods:
+ * - loadCurrentUser: Loads the current user's data and updates currentUser.
+ * - getCurrentUserId: Retrieves the current user's Firebase UID.
+ * - getCurrentUser: Retrieves the current user's details.
+ * - updateUserDetails: Updates the user's details in the local database and handles errors.
  */
 class AccountSettingsViewModel(private val dbHelper: DBHelper) : ViewModel() {
 
@@ -37,8 +37,8 @@ class AccountSettingsViewModel(private val dbHelper: DBHelper) : ViewModel() {
     val currentUser: LiveData<Customer?> = MutableLiveData()
 
     /**
-     * [loadCurrentUser]
-     * Description: Loads the current user's data and updates [currentUser].
+     * loadCurrentUser
+     * Description: Loads the current user's data and updates currentUser.
      */
     fun loadCurrentUser() {
         val firebaseUid = getCurrentUserId() ?: return
@@ -47,7 +47,7 @@ class AccountSettingsViewModel(private val dbHelper: DBHelper) : ViewModel() {
     }
 
     /**
-     * [getCurrentUserId]
+     * getCurrentUserId
      * Description: Retrieves the current user's Firebase UID.
      * Returns: Firebase UID as a String, or null if not authenticated.
      */
@@ -56,7 +56,7 @@ class AccountSettingsViewModel(private val dbHelper: DBHelper) : ViewModel() {
     }
 
     /**
-     * [getCurrentUser]
+     * getCurrentUser
      * Description: Retrieves the current user's details.
      * Returns: Current user's Customer object or null if not authenticated.
      */
@@ -66,24 +66,27 @@ class AccountSettingsViewModel(private val dbHelper: DBHelper) : ViewModel() {
     }
 
     /**
-     * [updateUserDetails]
+     * updateUserDetails
      * Description: Updates the user's details in the local database and handles errors.
-     * - [firebaseUid]: The Firebase UID of the user to update.
-     * - [fullName]: The updated full name of the user.
-     * - [email]: The updated email address of the user.
-     * - [phoneNo]: The updated phone number of the user.
-     * - [userName]: The updated user name.
-     * - [newPassword]: The updated password (if changed).
+     *
+     * Parameters:
+     * - firebaseUid: The Firebase UID of the user to update.
+     * - fullName: The updated full name of the user.
+     * - email: The updated email address of the user.
+     * - phoneNo: The updated phone number of the user.
+     * - userName: The updated user name.
+     * - newPassword: The updated password (if changed).
      */
     fun updateUserDetails(firebaseUid: String, fullName: String?, email: String?, phoneNo: String?, userName: String?, newPassword: String?) {
         try {
+            val encryptedPassword = newPassword?.let { EncryptionHelper.encrypt(it) }
             dbHelper.updateCustomerSelective(
                 firebaseUid,
                 fullName,
                 email,
                 phoneNo,
                 userName,
-                newPassword
+                encryptedPassword
             )
 
             // Check if the update was successful in the local database
@@ -93,15 +96,11 @@ class AccountSettingsViewModel(private val dbHelper: DBHelper) : ViewModel() {
                 Log.d("AccountSettingsVM", "User details updated successfully in the local database.")
             } else {
                 Log.e("AccountSettingsVM", "Failed to update user details in the local database.")
-                // TODO: Error handling toast message
             }
 
             // Rest of your code...
         } catch (e: Exception) {
             Log.e("AccountSettingsVM", "Error while updating user details in the local database: ${e.message}", e)
-            // TODO: Error handling toast message
         }
     }
 }
-
-
