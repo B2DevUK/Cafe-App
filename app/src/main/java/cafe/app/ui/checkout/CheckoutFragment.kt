@@ -1,3 +1,5 @@
+@file:Suppress("KDocUnresolvedReference")
+
 package cafe.app.ui.checkout
 
 import android.os.Bundle
@@ -18,6 +20,32 @@ import com.google.firebase.auth.FirebaseAuth
 import java.text.SimpleDateFormat
 import java.util.*
 
+/**
+ * [CheckoutFragment]
+ * Description: Fragment responsible for handling the checkout process, displaying cart items, and processing orders.
+ *
+ * [Author]
+ * Author Name: Brandon Sharp
+ *
+ * [Properties]
+ * - [checkoutViewModel]: ViewModel for managing the checkout process.
+ * - [checkoutAdapter]: Adapter for the RecyclerView displaying cart items.
+ * - [binding]: View binding object for the fragment's layout.
+ * - [dbHelper]: Database helper for database operations.
+ * - [user]: Current Firebase user.
+ * - [customerId]: ID of the current customer.
+ *
+ * [Methods]
+ * - [onCreateView]: Initializes the fragment's view and sets up necessary components.
+ * - [setupRecyclerView]: Initializes and configures the RecyclerView to display cart items.
+ * - [setupPaymentMethodSelection]: Sets up the payment method selection and defaults to "pay by cash."
+ * - [showCardDetailsDialog]: Displays a dialog for entering card details if "pay by card" is selected.
+ * - [collectCardDetails]: Collects card details entered by the user.
+ * - [createOrderFromCart]: Creates an order from the cart items and records the payment in the database.
+ * - [updateTotalPrice]: Updates the total price displayed based on the cart items.
+ * - [showOrderConfirmation]: Displays a toast message for a successful order placement and resets the payment method to "pay by cash."
+ * - [showError]: Displays a toast message for order placement failure.
+ */
 class CheckoutFragment : Fragment() {
 
     private lateinit var checkoutViewModel: CheckoutViewModel
@@ -73,14 +101,11 @@ class CheckoutFragment : Fragment() {
         }
     }
 
-    // This method is called within setupPaymentMethodSelection()
     private fun showCardDetailsDialog() {
         val dialogFragment = CardDetailsDialogFragment()
         dialogFragment.setCardDetailsListener(object : CardDetailsDialogFragment.CardDetailsListener {
             override fun onCardDetailsEntered(cardDetails: CardDetails) {
                 Toast.makeText(context, "Card details entered: ${cardDetails.cardNumber}", Toast.LENGTH_SHORT).show()
-                // Now you have card details, you can proceed with order creation
-                // Assuming createOrderFromCart() needs to be modified to accept CardDetails
                 createOrderFromCart(checkoutViewModel.cartItems.value ?: emptyMap(), cardDetails)
             }
         })
@@ -105,7 +130,7 @@ class CheckoutFragment : Fragment() {
         val currentTime = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
         val customerIdInt = dbHelper.getCustomerIdByFirebaseUid(customerId ?: "")
         if (customerIdInt != null && customerIdInt > 0) {
-            val orderId = dbHelper.addOrder(customerIdInt, currentDate, currentTime, 1) // Assuming 1 indicates the order status
+            val orderId = dbHelper.addOrder(customerIdInt, currentDate, currentTime, 1) // Pending Order Status
             if (orderId > 0) {
                 var totalAmount = 0.0
                 cartItems.values.forEach { cartItem ->
@@ -115,9 +140,7 @@ class CheckoutFragment : Fragment() {
                     }
                 }
 
-                // Check payment method
                 val paymentMethod = if (binding.payByCardRadioButton.isChecked) "card" else "cash"
-                // Record payment in the database
                 dbHelper.addPayment(orderId.toInt(), paymentMethod, totalAmount, currentDate)
 
                 checkoutViewModel.clearCart()
@@ -135,7 +158,6 @@ class CheckoutFragment : Fragment() {
 
     private fun showOrderConfirmation() {
         Toast.makeText(context, "Order placed successfully! Head to your notifications tab to track your order.", Toast.LENGTH_SHORT).show()
-        // Optionally navigate away or refresh the fragment to clear the cart view
         binding.payByCashRadioButton.isChecked = true
     }
 
@@ -143,3 +165,4 @@ class CheckoutFragment : Fragment() {
         Toast.makeText(context, "Failed to place the order. Please try again.", Toast.LENGTH_SHORT).show()
     }
 }
+

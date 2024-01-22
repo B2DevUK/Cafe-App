@@ -1,3 +1,5 @@
+@file:Suppress("KDocUnresolvedReference")
+
 package cafe.app.ui.checkout
 
 import android.os.Bundle
@@ -11,6 +13,25 @@ import androidx.fragment.app.DialogFragment
 import cafe.app.R
 import cafe.app.appclasses.CardDetails
 
+/**
+ * [CardDetailsDialogFragment]
+ * Description: A DialogFragment used for entering and validating card details.
+ *
+ * [Author]
+ * Author Name: Brandon Sharp
+ *
+ * [Interfaces]
+ * - [CardDetailsListener]: Interface to communicate card details to the hosting component.
+ *
+ * [Properties]
+ * - [listener]: Listener to handle card details entry.
+ *
+ * [Methods]
+ * - [setCardDetailsListener]: Sets the card details listener.
+ * - [onCreateView]: Inflates the dialog's layout and handles user interactions.
+ * - [isValidCardDetails]: Validates the entered card details.
+ * - [showToast]: Helper function to display a toast message.
+ */
 class CardDetailsDialogFragment : DialogFragment() {
     interface CardDetailsListener {
         fun onCardDetailsEntered(cardDetails: CardDetails)
@@ -42,7 +63,7 @@ class CardDetailsDialogFragment : DialogFragment() {
                 listener?.onCardDetailsEntered(CardDetails(cardNumber.toLong(), expiryDate, securityNumber.toInt(), fullName))
                 dismiss()
             } else {
-                Toast.makeText(requireContext(), "Invalid card details", Toast.LENGTH_SHORT).show()
+                showToast("Invalid card details")
             }
         }
 
@@ -51,7 +72,6 @@ class CardDetailsDialogFragment : DialogFragment() {
         return view
     }
 
-    // Function to validate card details (customize as needed)
     private fun isValidCardDetails(
         cardNumber: String,
         expiryDate: String,
@@ -88,10 +108,9 @@ class CardDetailsDialogFragment : DialogFragment() {
         return true
     }
 
-    // Helper function to show a toast message
     private fun showToast(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
-
 }
+
 
