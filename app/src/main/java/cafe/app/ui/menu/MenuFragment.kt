@@ -1,3 +1,5 @@
+@file:Suppress("KDocUnresolvedReference")
+
 package cafe.app.ui.menu
 
 import android.os.Bundle
@@ -16,6 +18,26 @@ import cafe.app.databinding.CategoryContainerBinding
 import cafe.app.ui.checkout.CheckoutViewModel
 import com.bumptech.glide.Glide
 
+/**
+ * [MenuFragment]
+ * Description: A fragment for displaying a menu of categories and products to the user.
+ *
+ * [Author]
+ * Author Name: Brandon Sharp
+ *
+ * [Properties]
+ * - [databaseHelper]: Helper class for database operations.
+ * - [containerForCategories]: Container layout for displaying categories.
+ * - [scrollView]: ScrollView for scrolling through categories.
+ * - [cartViewModel]: ViewModel for managing cart items.
+ *
+ * [Methods]
+ * - [onCreateView]: Inflates the fragment's layout and initializes views and properties.
+ * - [onViewCreated]: Called when the fragment's view is created. Sets up category navigation and populates categories with products.
+ * - [populateCategoriesWithProducts]: Populates the categories with products from the database.
+ * - [setupCategoryNavigation]: Sets up category navigation buttons and click listeners.
+ * - [scrollToCategory]: Scrolls the view to the selected category.
+ */
 class MenuFragment : Fragment() {
 
     private lateinit var databaseHelper: DBHelper
@@ -41,6 +63,10 @@ class MenuFragment : Fragment() {
         populateCategoriesWithProducts()
     }
 
+    /**
+     * [populateCategoriesWithProducts]
+     * Description: Populates the categories with products from the database.
+     */
     private fun populateCategoriesWithProducts() {
         val productsByCategory = databaseHelper.getAllProductsByCategory()
 
@@ -57,7 +83,7 @@ class MenuFragment : Fragment() {
                 val productBinding = ProductContainerBinding.inflate(layoutInflater)
                 val productNameTextView = productBinding.productName
                 val productPriceTextView = productBinding.productPrice
-                val productImageView = productBinding.productImage // Assuming this is your ImageView
+                val productImageView = productBinding.productImage
                 val addToCartButton = productBinding.addToCartButton
 
                 productNameTextView.text = product.name
@@ -65,9 +91,9 @@ class MenuFragment : Fragment() {
 
                 // Use Glide to load the product image from the URL
                 Glide.with(this)
-                    .load(product.image) // Assuming 'image' is the URL stored in ProductImage column
-                    .placeholder(R.drawable.ic_launcher_foreground) // Optional: a placeholder image
-                    .error(R.drawable.ic_launcher_foreground) // Optional: an error image
+                    .load(product.image)
+                    .placeholder(R.drawable.ic_launcher_foreground)
+                    .error(R.drawable.ic_launcher_foreground)
                     .into(productImageView)
 
                 addToCartButton.setOnClickListener {
@@ -80,6 +106,10 @@ class MenuFragment : Fragment() {
         }
     }
 
+    /**
+     * [setupCategoryNavigation]
+     * Description: Sets up category navigation buttons and click listeners.
+     */
     private fun setupCategoryNavigation() {
         view?.findViewById<TextView>(R.id.buttonTea)?.setOnClickListener { scrollToCategory("Tea") }
         view?.findViewById<TextView>(R.id.buttonCoffee)?.setOnClickListener { scrollToCategory("Coffee") }
@@ -88,6 +118,12 @@ class MenuFragment : Fragment() {
         view?.findViewById<TextView>(R.id.buttonMerch)?.setOnClickListener { scrollToCategory("Merchandise") }
     }
 
+    /**
+     * [scrollToCategory]
+     * Description: Scrolls the view to the selected category.
+     *
+     * @param category: The name of the category to scroll to.
+     */
     private fun scrollToCategory(category: String) {
         val categoryContainerView = containerForCategories.findViewWithTag<View>(category)
         categoryContainerView?.let {
@@ -96,3 +132,4 @@ class MenuFragment : Fragment() {
         }
     }
 }
+
