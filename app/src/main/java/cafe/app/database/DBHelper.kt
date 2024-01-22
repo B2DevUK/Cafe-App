@@ -77,6 +77,12 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
     private val Payment_Column_Amount = "Amount"
     private val Payment_Column_Date = "PaymentDate"
 
+    /* Feedback Table */
+    private val FeedbackTableName = "TFeedback"
+    private val Feedback_Column_OrderID = "OrderID"
+    private val Feedback_Column_Score = "FeedbackScore"
+    private val Feedback_Column_Comments = "FeedbackComments"
+
     // ..............................................................................
     // This is called the first time a database is accessed
     // Create a new database if not exist
@@ -138,6 +144,18 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
                 "$Payment_Column_Date TEXT NOT NULL, " +
                 "FOREIGN KEY ($Payment_Column_OrderID) REFERENCES $OrderTableName($Order_Column_ID))"
         db?.execSQL(sqlCreatePaymentTable)
+
+        // Create Feedback Table
+        var sqlCreateFeedbackStatement: String = """
+            CREATE TABLE $FeedbackTableName (
+                ${Feedback_Column_OrderID} INTEGER PRIMARY KEY,
+                ${Feedback_Column_Score} INTEGER NOT NULL,
+                ${Feedback_Column_Comments} TEXT,
+                FOREIGN KEY(${Feedback_Column_OrderID}) REFERENCES $OrderTableName($Order_Column_ID)
+        )
+        """.trimIndent()
+
+        db?.execSQL(sqlCreateFeedbackStatement)
     }
 
     // This is called if the database ver. is changed
@@ -752,4 +770,49 @@ class DBHelper(context: Context) : SQLiteOpenHelper(context, DataBaseName,null ,
         cursor.close()
         return payments
     }
+
+    fun getPaymentByOrderId(orderId: Int): Payment? {
+        val db = this.readableDatabase
+        val cursor = db.query(
+            "TPayment",
+            null,
+            "OrderID = ?",
+            arrayOf(orderId.toString()),
+            null,
+            null,
+            null
+        )
+        if (cursor.moveToFirst()) {
+            val id = cursor.getInt(cursor.getColumnIndexOrThrow("PaymentID"))
+            val type = cursor.getString(cursor.getColumnIndexOrThrow("PaymentType"))
+            val amount = cursor.getDouble(cursor.getColumnIndexOrThrow("Amount"))
+            val date = cursor.getString(cursor.getColumnIndexOrThrow("PaymentDate"))
+            cursor.close()
+            return Payment(id, orderId, type, amount, date)
+        }
+        cursor.close()
+        return null
+    }
+
+    // FEEDBACK
+
+    fun addFeedback(orderId: Int, score: Int, comments: String): Long {
+        val db = this.writableDatabase
+        val contentValues = ContentValues().apply {
+            put(Feedback_Column_OrderID, orderId)
+            put(Feedback_Column_Score, score)
+            put(Feedback_Column_Comments, comments)
+        }
+        return db.insert(FeedbackTableName, null, contentValues).also { db.close() }
+    }
+
+    fun feedbackExists(orderId: Int): Boolean {
+        val db = this.readableDatabase
+        val cursor = db.query(FeedbackTableName, arrayOf(Feedback_Column_OrderID), "$Feedback_Column_OrderID = ?", arrayOf(orderId.toString()), null, null, null)
+        val exists = cursor.moveToFirst()
+        cursor.close()
+        return exists
+    }
+
+
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,7 +33,16 @@ class NotificationsFragment : Fragment() {
 
     private fun setupRecyclerView() {
         val dbHelper = DBHelper(requireContext())
-        val adapter = NotificationsAdapter(dbHelper)
+
+        // Define the feedback listener
+        val feedbackListener = object : FeedbackDialogFragment.FeedbackListener {
+            override fun onFeedbackSubmitted(orderId: Int, score: Int, comments: String) {
+                dbHelper.addFeedback(orderId, score, comments)
+                Toast.makeText(context, "Feedback submitted", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        val adapter = NotificationsAdapter(dbHelper, feedbackListener)
         binding.notificationsRecyclerView.adapter = adapter
         binding.notificationsRecyclerView.layoutManager = LinearLayoutManager(context)
 
@@ -40,6 +50,7 @@ class NotificationsFragment : Fragment() {
             adapter.submitList(notifications)
         }
     }
+
 
     private fun getCurrentCustomerId(): Int {
         val dbHelper = DBHelper(requireContext())

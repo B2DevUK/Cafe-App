@@ -24,6 +24,4 @@ class NotificationsViewModel(private val dbHelper: DBHelper) : ViewModel() {
         Log.d("NotificationsVM", "Fetched orders: ${orders.size}")
         _notifications.postValue(orders)
     }
-
-
 }
