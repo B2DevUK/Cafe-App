@@ -48,7 +48,7 @@ class MenuFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         val view = inflater.inflate(R.layout.fragment_menu, container, false)
 
-        scrollView = view.findViewById(R.id.scrollView)
+        scrollView = view.findViewById(R.id.menuScroll)
         containerForCategories = view.findViewById(R.id.containerForCategories)
         cartViewModel = ViewModelProvider(requireActivity())[CheckoutViewModel::class.java]
         databaseHelper = DBHelper(requireContext())
